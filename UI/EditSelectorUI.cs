@@ -1,0 +1,86 @@
+﻿using BloonFactory.Modules.Core;
+using BTD_Mod_Helper.Api;
+using BTD_Mod_Helper.Api.Components;
+using BTD_Mod_Helper.Api.Enums;
+using BTD_Mod_Helper.Extensions;
+using Il2CppAssets.Scripts.Unity.Menu;
+using Il2CppAssets.Scripts.Unity.UI_New.InGame.RightMenu.Powers;
+using Il2CppAssets.Scripts.Unity.UI_New.Main.PowersSelect;
+using Il2CppAssets.Scripts.Unity.UI_New.Popups;
+using Il2CppAssets.Scripts.Unity.UI_New.Settings;
+using Il2CppNinjaKiwi.Common;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using UnityEngine;
+
+namespace BloonFactory.UI
+{
+    internal class EditSelectorUI : ModGameMenu<SettingsScreen>
+    {
+        public ModHelperScrollPanel scrollPanel;
+        public override bool OnMenuOpened(Il2CppSystem.Object data)
+        {
+            GameMenu.transform.DestroyAllChildren();
+            var panel = GameMenu.gameObject.AddModHelperPanel(new Info("Root", InfoPreset.FillParent));
+
+            CreateMainContent(panel);
+            CreateExtraContent(panel);
+            return false;
+        }
+        public void CreateMainContent(ModHelperPanel root)
+        {
+            var panel = root.AddPanel(new Info("MainPanel", 0, 50, 3500, 1700), VanillaSprites.MainBGPanelBlue);
+            scrollPanel = panel.AddScrollPanel(new Info("ScrollPanel", 0, 0, 3400, 1600), UnityEngine.RectTransform.Axis.Vertical, VanillaSprites.BlueInsertPanelRound, 50, 50);
+
+            AddContent();
+        }
+        public void CreateExtraContent(ModHelperPanel root)
+        {
+            root.AddButton(new Info("CreateNewBloon", 0, 250, 800, 300, new Vector2(0.5f, 0)), VanillaSprites.GreenBtnLong, new Action(() =>
+            {
+                MenuManager.instance.buttonClickSound.Play("ClickSounds");
+                PopupScreen.instance.SafelyQueue(screen => screen.ShowSetNamePopup("Create Bloon", "Name of bloon to create.\n", new Action<string>(name =>
+                {
+                    if (!string.IsNullOrEmpty(name))
+                    {
+                        SerializationHandler.CreateTemplate(name);
+                        AddContent();
+                    }
+                }), null));
+                PopupScreen.instance.SafelyQueue(screen => screen.ModifyField(tmpInputField =>
+                {
+                    tmpInputField.textComponent.font = Fonts.Btd6FontBody;
+                    tmpInputField.characterLimit = 20;
+                }));
+            }))
+            .AddText(new Info("Text", 0, 0, 700, 250), "Create", 120);
+        }
+        public void AddContent()
+        {
+            scrollPanel.ScrollContent.transform.DestroyAllChildren();
+
+            foreach (var template in SerializationHandler.Templates.Where(a => !a.IsQueueForDeletion))
+            {
+                scrollPanel.AddScrollContent(CreateContentPanel(template));
+            }
+        }
+        public ModHelperPanel CreateContentPanel(BloonTemplate template)
+        {
+            var panel = ModHelperPanel.Create(new Info("Template", 3300, 300), VanillaSprites.MainBGPanelBlue);
+
+            panel.AddText(new Info("Name", 600, 0, 1000, 150, new Vector2(0, 0.5f)), template.Name, 100, Il2CppTMPro.TextAlignmentOptions.Left).EnableAutoSizing(150, 10);
+            panel.AddButton(new Info("Edit", 1500, 0, 200, 200), VanillaSprites.EditBtn, new Action(() => { OpenEditorWithTemplate(template); }));
+            panel.AddButton(new Info("Delete", 1250, 0, 200, 200), VanillaSprites.CloseBtn, new Action(() => { SerializationHandler.DeleteTemplate(template); AddContent(); }));
+            return panel;
+        }
+        public void OpenEditorWithTemplate(BloonTemplate template)
+        {
+            BloonEditorUI.Template = template;
+            ModGameMenu.Open<BloonEditorUI>();
+        }
+        
+    }
+}
