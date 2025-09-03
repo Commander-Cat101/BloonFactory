@@ -50,7 +50,11 @@ namespace BloonFactory
 
             foreach (var path in Directory.GetFiles(FolderDirectory).Where(f => f.EndsWith(".cstmbln")))
             {
-                Templates.Add(LoadTemplate(path));
+                var template = LoadTemplate(path);
+                if (!Templates.Any(a => a.Guid == template.Guid))
+                {
+                    Templates.Add(template);
+                }
             }
             HasLoaded = true;
         }

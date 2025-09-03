@@ -17,6 +17,9 @@
         <HintPath>..\..\SteamLibrary\steamapps\common\BloonsTD6\Mods\FactoryCore.dll</HintPath>
       </Reference>
     </ItemGroup>
+    <ItemGroup>
+      <Folder Include="Property\" />
+    </ItemGroup>
 
     <Import Project="..\btd6.targets" />
 </Project>

@@ -1,11 +1,8 @@
 ﻿using BloonFactory.LinkTypes;
 using FactoryCore.API;
 using FactoryCore.API.ModuleValues;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Il2CppAssets.Scripts.Models.Bloons;
+using Newtonsoft.Json;
 
 namespace BloonFactory.Modules.Core
 {
@@ -13,6 +10,10 @@ namespace BloonFactory.Modules.Core
     {
         public override string Name => "Bloon";
 
+        public override string Description => "Adds the base functionality of your custom bloon.";
+
+        [JsonIgnore]
+        public BloonModel currentModel;
         public override void GetModuleProperties()
         {
             AddProperty(new StringModuleProperty("Name", "Custom Bloon", 20));
@@ -23,11 +24,14 @@ namespace BloonFactory.Modules.Core
         public override void GetLinkNodes()
         {
             AddOutput<Visuals>("Visuals", () => null);
-            AddOutput<Bloon>("Bloon", () => null );
+            AddOutput<BloonModel>("Bloon", () => currentModel);
         }
         public override void ProcessModule()
         {
-            
+            currentModel.speed = GetValue<float>("Speed");
+            currentModel.maxHealth = GetValue<int>("Health");
+
+            GetOutputsModules("Bloon").ProcessAll();
         }
     }
 }

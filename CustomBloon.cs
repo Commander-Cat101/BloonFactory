@@ -1,5 +1,8 @@
-﻿using BTD_Mod_Helper.Api;
+﻿using BloonFactory.Modules;
+using BloonFactory.Modules.Core;
+using BTD_Mod_Helper.Api;
 using BTD_Mod_Helper.Api.Bloons;
+using FactoryCore.API;
 using Il2CppAssets.Scripts.Models.Bloons;
 using MelonLoader;
 using System;
@@ -18,6 +21,11 @@ namespace BloonFactory
         public override string BaseBloon => "Red";
 
         public BloonTemplate BloonTemplate;
+
+        public CustomBloon()
+        {
+
+        }
         public CustomBloon(BloonTemplate template)
         {
             BloonTemplate = template;
@@ -27,14 +35,31 @@ namespace BloonFactory
             bloonModel.name = BloonTemplate.Name;
             bloonModel.id = BloonTemplate.Guid.ToString();
         }
+        public void ModifyExistingBloonModel(BloonModel model)
+        {
+            BloonTemplate.LoadModules();
+            foreach (var module in BloonTemplate.GetModulesOfType<BloonModule>())
+            {
+                MelonLogger.Msg("Processing module");
+                module.currentModel = model;
+                module.ProcessModule();
+            }
+
+            foreach (var module in BloonTemplate.GetModulesOfType<TriggerModule>())
+            {
+                module.currentModel = model;
+                module.ProcessModule();
+            }
+        }
         public override IEnumerable<ModContent> Load()
         {
             if (!SerializationHandler.HasLoaded)
                 SerializationHandler.LoadAllTemplates();
-            MelonLogger.Error("STARTING LOAD");
+
+            MelonLogger.Msg("STARTING LOAD");
             foreach (var template in SerializationHandler.Templates)
             {
-                MelonLogger.Error($"Loading {template.Name} bloon...");
+                MelonLogger.Msg($"Loading {template.Name} bloon...");
                 yield return new CustomBloon(template);
             }
         }
