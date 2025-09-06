@@ -1,8 +1,10 @@
 ﻿using BloonFactory.LinkTypes;
 using BTD_Mod_Helper.Extensions;
 using FactoryCore.API;
+using FactoryCore.API.ModuleProperties;
 using FactoryCore.API.ModuleValues;
 using Il2CppAssets.Scripts.Models.Bloons.Behaviors;
+using Il2CppNinjaKiwi.Common.ResourceUtils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,14 +13,12 @@ using System.Threading.Tasks;
 
 namespace BloonFactory.Modules.Actions
 {
-    internal class BuffNearbyBloonsActionModule : Module
+    internal class SetImmuneActionModule : Module
     {
-        public override string Name => "Buff Nearby Bloons";
-
+        public override string Name => "Set Immune";
         public override void GetModuleProperties()
         {
-            AddProperty(new FloatModuleProperty("Distance", 25, 0, float.PositiveInfinity));
-            AddProperty(new FloatModuleProperty("Speed Buff", 2f, 0.1f, 99));
+            AddProperty(new BoolModuleProperty("Set Immune", true));
         }
         public override void GetLinkNodes()
         {
@@ -28,7 +28,7 @@ namespace BloonFactory.Modules.Actions
         public override void ProcessModule()
         {
             var trigger = GetInputValue<Trigger>("Trigger");
-            trigger.bloonModel.AddBehavior(new BuffBloonsInRadiusActionModel("SellTowersInRadiusModel", Id.ToString(), GetValue<float>("Distance"), GetValue<float>("Speed Buff")));
+            trigger.bloonModel.AddBehavior(new SetImmuneActionModel("SetImmuneActionModel", Id.ToString(), GetValue<bool>("Set Immune"), new AudioClipReference("")));
         }
     }
 }

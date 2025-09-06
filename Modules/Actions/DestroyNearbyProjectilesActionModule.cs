@@ -3,6 +3,7 @@ using BTD_Mod_Helper.Extensions;
 using FactoryCore.API;
 using FactoryCore.API.ModuleValues;
 using Il2CppAssets.Scripts.Models.Bloons.Behaviors;
+using Il2CppNinjaKiwi.Common.ResourceUtils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,14 +12,14 @@ using System.Threading.Tasks;
 
 namespace BloonFactory.Modules.Actions
 {
-    internal class BuffNearbyBloonsActionModule : Module
+    internal class DestroyNearbyProjectilesActionModule : Module
     {
-        public override string Name => "Buff Nearby Bloons";
+        public override string Name => "Destroy Nearby Projectiles";
 
         public override void GetModuleProperties()
         {
-            AddProperty(new FloatModuleProperty("Distance", 25, 0, float.PositiveInfinity));
-            AddProperty(new FloatModuleProperty("Speed Buff", 2f, 0.1f, 99));
+            AddProperty(new IntSliderModuleProperty("Heal Percent", 25, 0, 100));
+            AddProperty(new IntModuleProperty("Heal Additive", 0, int.MinValue, int.MinValue));
         }
         public override void GetLinkNodes()
         {
@@ -28,7 +29,7 @@ namespace BloonFactory.Modules.Actions
         public override void ProcessModule()
         {
             var trigger = GetInputValue<Trigger>("Trigger");
-            trigger.bloonModel.AddBehavior(new BuffBloonsInRadiusActionModel("SellTowersInRadiusModel", Id.ToString(), GetValue<float>("Distance"), GetValue<float>("Speed Buff")));
+            trigger.bloonModel.AddBehavior(new HealBloonActionModel("HealBloonAction", GetValue<int>("Heal Percent") / 100, GetValue<int>("Heal Additive"), Id.ToString()));
         }
     }
 }

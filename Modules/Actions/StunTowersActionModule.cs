@@ -4,22 +4,17 @@ using FactoryCore.API;
 using FactoryCore.API.ModuleValues;
 using Il2CppAssets.Scripts.Models.Bloons.Behaviors;
 using Il2CppNinjaKiwi.Common.ResourceUtils;
-using MelonLoader;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BloonFactory.Modules.Actions
 {
-    internal class SellNearbyTowersActionModule : Module
+    internal class StunTowersActionModule : Module
     {
-        public override string Name => "Sell Nearby Towers";
+        public override string Name => "Stun Towers";
 
         public override void GetModuleProperties()
         {
-            AddProperty(new FloatModuleProperty("Distance", 25, 0, float.PositiveInfinity));
+            AddProperty(new FloatModuleProperty("Distance", 25, float.MinValue, float.MinValue));
+            AddProperty(new FloatModuleProperty("Duration", 3, float.MinValue, float.MinValue));
         }
         public override void GetLinkNodes()
         {
@@ -29,8 +24,7 @@ namespace BloonFactory.Modules.Actions
         public override void ProcessModule()
         {
             var trigger = GetInputValue<Trigger>("Trigger");
-            trigger.bloonModel.AddBehavior(new SellTowersInRadiusActionModel("SellTowersInRadiusModel", Id.ToString(), GetValue<float>("Distance"), new PrefabReference(""), 0));
-            
+            trigger.bloonModel.AddBehavior(new StunTowersInRadiusActionModel("StunTowers", Id.ToString(), GetValue<float>("Distance"), GetValue<float>("Duration"), 0.3f, new PrefabReference(""), false));
         }
     }
 }

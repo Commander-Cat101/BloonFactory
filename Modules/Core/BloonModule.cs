@@ -23,7 +23,7 @@ namespace BloonFactory.Modules.Core
         }
         public override void GetLinkNodes()
         {
-            AddOutput<Visuals>("Visuals", () => null);
+            AddOutput<Visuals>("Visuals", () => new Visuals(currentModel));
             AddOutput<BloonModel>("Bloon", () => currentModel);
         }
         public override void ProcessModule()
@@ -32,6 +32,7 @@ namespace BloonFactory.Modules.Core
             currentModel.maxHealth = GetValue<int>("Health");
 
             GetOutputsModules("Bloon").ProcessAll();
+            GetOutputsModules("Visuals").ProcessAll();
         }
     }
 }

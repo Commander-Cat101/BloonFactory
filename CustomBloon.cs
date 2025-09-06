@@ -4,6 +4,7 @@ using BTD_Mod_Helper.Api;
 using BTD_Mod_Helper.Api.Bloons;
 using FactoryCore.API;
 using Il2CppAssets.Scripts.Models.Bloons;
+using Il2CppNinjaKiwi.Common.ResourceUtils;
 using MelonLoader;
 using System;
 using System.Collections.Generic;
@@ -22,6 +23,7 @@ namespace BloonFactory
 
         public BloonTemplate BloonTemplate;
 
+        public override SpriteReference IconReference => GetSpriteReference("BaseBloon");
         public CustomBloon()
         {
 

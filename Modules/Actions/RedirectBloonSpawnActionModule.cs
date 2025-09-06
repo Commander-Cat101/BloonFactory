@@ -3,23 +3,18 @@ using BTD_Mod_Helper.Extensions;
 using FactoryCore.API;
 using FactoryCore.API.ModuleValues;
 using Il2CppAssets.Scripts.Models.Bloons.Behaviors;
+using Il2CppAssets.Scripts.Models.Effects;
 using Il2CppNinjaKiwi.Common.ResourceUtils;
-using MelonLoader;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BloonFactory.Modules.Actions
 {
-    internal class SellNearbyTowersActionModule : Module
+    internal class RedirectBloonSpawnActionModule : Module
     {
-        public override string Name => "Sell Nearby Towers";
+        public override string Name => "Redirect Bloon Spawn";
 
         public override void GetModuleProperties()
         {
-            AddProperty(new FloatModuleProperty("Distance", 25, 0, float.PositiveInfinity));
+            AddProperty(new FloatModuleProperty("Duration", 5, 0, float.PositiveInfinity));
         }
         public override void GetLinkNodes()
         {
@@ -29,8 +24,8 @@ namespace BloonFactory.Modules.Actions
         public override void ProcessModule()
         {
             var trigger = GetInputValue<Trigger>("Trigger");
-            trigger.bloonModel.AddBehavior(new SellTowersInRadiusActionModel("SellTowersInRadiusModel", Id.ToString(), GetValue<float>("Distance"), new PrefabReference(""), 0));
-            
+            trigger.bloonModel.AddBehavior(new RedirectBloonSpawnActionModel("RedirectBloonSpawnActionModel", GetValue<float>("Duration"), 9999, new PrefabReference("ff187be8bcc6d834084e17ae5084f9b9"), Id.ToString(), false, new EffectModel("thing", new PrefabReference("e3e1a9b2926ffeb4cad93d3f74b42b62"), 1, 1)));
+
         }
     }
 }

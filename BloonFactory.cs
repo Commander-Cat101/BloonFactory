@@ -1,16 +1,15 @@
 using BloonFactory;
-using BloonFactory.Modules.Core;
+using BloonFactory.LinkTypes;
 using BloonFactory.UI;
 using BTD_Mod_Helper;
 using BTD_Mod_Helper.Api;
-using FactoryCore.API;
 using FactoryCore.UI;
 using Il2CppAssets.Scripts.Models;
 using Il2CppAssets.Scripts.Models.Bloons;
 using MelonLoader;
+using System;
 using System.Linq;
 using UnityEngine;
-using static MelonLoader.MelonLogger;
 
 [assembly: MelonInfo(typeof(BloonFactory.BloonFactory), ModHelperData.Name, ModHelperData.Version, ModHelperData.RepoOwner)]
 [assembly: MelonGame("Ninja Kiwi", "BloonsTD6")]
@@ -24,6 +23,8 @@ public class BloonFactory : BloonsTD6Mod
         ModHelper.Msg<BloonFactory>("BloonFactory loaded!");
         SerializationHandler.LoadAllTemplates();
         ValueColors.ColorByLinkType[typeof(BloonModel)] = Color.green;
+        ValueColors.ColorByLinkType[typeof(Trigger)] = Color.magenta;
+        ValueColors.ColorByLinkType[typeof(Visuals)] = Color.cyan;
     }
     public override void OnUpdate()
     {
@@ -36,12 +37,19 @@ public class BloonFactory : BloonsTD6Mod
     {
         foreach (var bloon in CustomBloon.Bloons)
         {
-            var bloonModel = result.bloons.First(bl => bl.id == bloon.BloonTemplate.TemplateId);
+            try
+            {
+                var bloonModel = result.bloons.First(bl => bl.id == bloon.BloonTemplate.TemplateId);
 
-            MelonLogger.Msg($"Updating Existing BloonModel - {bloon.BloonTemplate.Name}");
+                MelonLogger.Msg($"Updating Existing BloonModel - {bloon.BloonTemplate.Name}");
 
-            bloon.ModifyExistingBloonModel(bloonModel);
-            result.bloonsByName[bloonModel.name] = bloonModel;
+                bloon.ModifyExistingBloonModel(bloonModel);
+                result.bloonsByName[bloonModel.name] = bloonModel;
+            }
+            catch (Exception ex)
+            {
+                MelonLogger.Error(ex);
+            }
         }
     }
 }

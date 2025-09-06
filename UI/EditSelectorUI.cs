@@ -2,6 +2,7 @@
 using BTD_Mod_Helper.Api;
 using BTD_Mod_Helper.Api.Components;
 using BTD_Mod_Helper.Api.Enums;
+using BTD_Mod_Helper.Api.Helpers;
 using BTD_Mod_Helper.Extensions;
 using Il2CppAssets.Scripts.Unity.Menu;
 using Il2CppAssets.Scripts.Unity.UI_New.InGame.RightMenu.Powers;
@@ -74,6 +75,14 @@ namespace BloonFactory.UI
             panel.AddText(new Info("Name", 600, 0, 1000, 150, new Vector2(0, 0.5f)), template.Name, 100, Il2CppTMPro.TextAlignmentOptions.Left).EnableAutoSizing(150, 10);
             panel.AddButton(new Info("Edit", 1500, 0, 200, 200), VanillaSprites.EditBtn, new Action(() => { OpenEditorWithTemplate(template); }));
             panel.AddButton(new Info("Delete", 1250, 0, 200, 200), VanillaSprites.CloseBtn, new Action(() => { SerializationHandler.DeleteTemplate(template); AddContent(); }));
+
+            if (!template.IsLoaded)
+                panel.AddButton(new Info("NotLoaded", 0, 0, 100, 100, new Vector2(1, 1)), VanillaSprites.NoticeBtn,
+                    new Action(() =>
+                    {
+                        PopupScreen.instance.SafelyQueue(screen => screen.ShowPopup(PopupScreen.Placement.menuCenter, "This Bloon is unloaded", "This bloon is unloaded and wont show up ingame, restart the game to load this bloon.", null, "Ok", new Action(() => { ProcessHelper.RestartGame(); }), "Restart Game", Popup.TransitionAnim.Scale));
+                    })
+                );
             return panel;
         }
         public void OpenEditorWithTemplate(BloonTemplate template)
