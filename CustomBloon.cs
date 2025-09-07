@@ -4,6 +4,7 @@ using BTD_Mod_Helper.Api;
 using BTD_Mod_Helper.Api.Bloons;
 using FactoryCore.API;
 using Il2CppAssets.Scripts.Models.Bloons;
+using Il2CppAssets.Scripts.Models.Rounds;
 using Il2CppNinjaKiwi.Common.ResourceUtils;
 using MelonLoader;
 using System;
@@ -37,13 +38,14 @@ namespace BloonFactory
             bloonModel.name = BloonTemplate.Name;
             bloonModel.id = BloonTemplate.Guid.ToString();
         }
-        public void ModifyExistingBloonModel(BloonModel model)
+        public void ModifyExistingBloonModel(BloonModel model, RoundSetModel roundset)
         {
             BloonTemplate.LoadModules();
             foreach (var module in BloonTemplate.GetModulesOfType<BloonModule>())
             {
                 MelonLogger.Msg("Processing module");
                 module.currentModel = model;
+                module.currentRoundSet = roundset;
                 module.ProcessModule();
             }
 

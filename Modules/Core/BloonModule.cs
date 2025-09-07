@@ -1,7 +1,9 @@
 ﻿using BloonFactory.LinkTypes;
 using FactoryCore.API;
 using FactoryCore.API.ModuleValues;
+using Il2CppAssets.Scripts.Data.Gameplay;
 using Il2CppAssets.Scripts.Models.Bloons;
+using Il2CppAssets.Scripts.Models.Rounds;
 using Newtonsoft.Json;
 
 namespace BloonFactory.Modules.Core
@@ -14,6 +16,8 @@ namespace BloonFactory.Modules.Core
 
         [JsonIgnore]
         public BloonModel currentModel;
+        [JsonIgnore]
+        public RoundSetModel currentRoundSet;
         public override void GetModuleProperties()
         {
             AddProperty(new StringModuleProperty("Name", "Custom Bloon", 20));
@@ -25,14 +29,17 @@ namespace BloonFactory.Modules.Core
         {
             AddOutput<Visuals>("Visuals", () => new Visuals(currentModel));
             AddOutput<BloonModel>("Bloon", () => currentModel);
+            AddOutput<RoundSetModel>("Roundset", () => currentRoundSet);
         }
         public override void ProcessModule()
         {
             currentModel.speed = GetValue<float>("Speed");
             currentModel.maxHealth = GetValue<int>("Health");
+            currentModel.leakDamage = GetValue<int>("Damage");
 
             GetOutputsModules("Bloon").ProcessAll();
             GetOutputsModules("Visuals").ProcessAll();
+            GetOutputsModules("Roundset").ProcessAll();
         }
     }
 }

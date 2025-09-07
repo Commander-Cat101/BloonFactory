@@ -22,8 +22,11 @@ namespace BloonFactory.UI
     internal class EditSelectorUI : ModGameMenu<SettingsScreen>
     {
         public ModHelperScrollPanel scrollPanel;
+        public Animator bottomGroupAnimator;
+        public Animator mainPanelAnimator;
         public override bool OnMenuOpened(Il2CppSystem.Object data)
         {
+            GameMenu.anim.updateMode = AnimatorUpdateMode.UnscaledTime;
             GameMenu.transform.DestroyAllChildren();
             var panel = GameMenu.gameObject.AddModHelperPanel(new Info("Root", InfoPreset.FillParent));
 
@@ -31,16 +34,25 @@ namespace BloonFactory.UI
             CreateExtraContent(panel);
             return false;
         }
+        public override void OnMenuClosed()
+        {
+            bottomGroupAnimator.Play("PopupSlideOut");
+            mainPanelAnimator.Play("PopupScaleOut");
+        }
         public void CreateMainContent(ModHelperPanel root)
         {
             var panel = root.AddPanel(new Info("MainPanel", 0, 50, 3500, 1700), VanillaSprites.MainBGPanelBlue);
             scrollPanel = panel.AddScrollPanel(new Info("ScrollPanel", 0, 0, 3400, 1600), UnityEngine.RectTransform.Axis.Vertical, VanillaSprites.BlueInsertPanelRound, 50, 50);
 
+            mainPanelAnimator = panel.AddComponent<Animator>();
+            mainPanelAnimator.runtimeAnimatorController = Animations.PopupAnim;
+            mainPanelAnimator.speed = .55f;
+            mainPanelAnimator.Play("PopupSlideIn");
             AddContent();
         }
         public void CreateExtraContent(ModHelperPanel root)
         {
-            root.AddButton(new Info("CreateNewBloon", 0, 250, 800, 300, new Vector2(0.5f, 0)), VanillaSprites.GreenBtnLong, new Action(() =>
+            var button = root.AddButton(new Info("CreateNewBloon", 0, 250, 800, 300, new Vector2(0.5f, 0)), VanillaSprites.GreenBtnLong, new Action(() =>
             {
                 MenuManager.instance.buttonClickSound.Play("ClickSounds");
                 PopupScreen.instance.SafelyQueue(screen => screen.ShowSetNamePopup("Create Bloon", "Name of bloon to create.\n", new Action<string>(name =>
@@ -56,8 +68,13 @@ namespace BloonFactory.UI
                     tmpInputField.textComponent.font = Fonts.Btd6FontBody;
                     tmpInputField.characterLimit = 20;
                 }));
-            }))
-            .AddText(new Info("Text", 0, 0, 700, 250), "Create", 120);
+            }));
+            button.AddText(new Info("Text", 0, 0, 700, 250), "Create", 120);
+
+            bottomGroupAnimator = button.GetComponent<Animator>();
+            bottomGroupAnimator.runtimeAnimatorController = Animations.PopupAnim;
+            bottomGroupAnimator.speed = .55f;
+            bottomGroupAnimator.Play("PopupScaleIn");
         }
         public void AddContent()
         {

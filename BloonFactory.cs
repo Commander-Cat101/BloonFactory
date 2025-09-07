@@ -43,7 +43,7 @@ public class BloonFactory : BloonsTD6Mod
 
                 MelonLogger.Msg($"Updating Existing BloonModel - {bloon.BloonTemplate.Name}");
 
-                bloon.ModifyExistingBloonModel(bloonModel);
+                bloon.ModifyExistingBloonModel(bloonModel, result.roundSet);
                 result.bloonsByName[bloonModel.name] = bloonModel;
             }
             catch (Exception ex)
