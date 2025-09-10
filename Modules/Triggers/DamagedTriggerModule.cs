@@ -19,7 +19,7 @@ namespace BloonFactory.Modules.Triggers
         public override void GetModuleProperties()
         {
             AddProperty(new FloatModuleProperty("Cooldown", 5, 0, float.MaxValue));
-            AddProperty(new FloatSliderModuleProperty("Chance", 0.5f, 0, 1, 0.01f));
+            AddProperty(new IntSliderModuleProperty("Chance", 50, 0, 100));
         }
 
         public override void GetLinkNodes()
@@ -30,7 +30,7 @@ namespace BloonFactory.Modules.Triggers
         public override void ProcessModule()
         {
             var guids = new Il2CppStringArray(GetOutputsModules("Trigger").AsGuids());
-            currentModel.AddBehavior(new OnDamagedTriggerModel("OnDamagedTriggerModel", guids, GetValue<float>("Cooldown"), GetValue<float>("Chance")));
+            currentModel.AddBehavior(new OnDamagedTriggerModel("OnDamagedTriggerModel", guids, GetValue<float>("Cooldown"), GetValue<int>("Chance") / 100));
 
             GetOutputsModules("Trigger").ProcessAll();
         }

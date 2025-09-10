@@ -19,6 +19,7 @@ namespace BloonFactory.Modules.Triggers
         public override void GetModuleProperties()
         {
             AddProperty(new FloatModuleProperty("Interval", 5, 0, float.MaxValue));
+            AddProperty(new IntSliderModuleProperty("Percentage", 50, 0, 100));
         }
 
         public override void GetLinkNodes()
@@ -29,7 +30,7 @@ namespace BloonFactory.Modules.Triggers
         public override void ProcessModule()
         {
             var guids = new Il2CppStringArray(GetOutputsModules("Trigger").AsGuids());
-            currentModel.AddBehavior(new HealthPercentTriggerModel("HealthPercentTriggerModel"));
+            currentModel.AddBehavior(new HealthPercentTriggerModel("HealthPercentTriggerModel", false, new float[GetValue<int>("Percentage") / 100], guids, true));
 
             GetOutputsModules("Trigger").ProcessAll();
         }

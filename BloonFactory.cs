@@ -40,7 +40,6 @@ public class BloonFactory : BloonsTD6Mod
             try
             {
                 var bloonModel = result.bloons.First(bl => bl.id == bloon.BloonTemplate.TemplateId);
-
                 MelonLogger.Msg($"Updating Existing BloonModel - {bloon.BloonTemplate.Name}");
 
                 bloon.ModifyExistingBloonModel(bloonModel, result.roundSet);

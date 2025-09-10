@@ -12,6 +12,7 @@ namespace BloonFactory.Modules.Core
     {
         public override string Name => "Bloon";
 
+        public override bool IsRemovable => false;
         public override string Description => "Adds the base functionality of your custom bloon.";
 
         [JsonIgnore]

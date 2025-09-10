@@ -53,6 +53,7 @@ namespace BloonFactory
                 var template = LoadTemplate(path);
                 if (!Templates.Any(a => a.Guid == template.Guid))
                 {
+                    template.LoadModules();
                     Templates.Add(template);
                 }
             }

@@ -1,4 +1,5 @@
 ﻿using BTD_Mod_Helper;
+using BTD_Mod_Helper.Api.Bloons;
 using BTD_Mod_Helper.Api.Display;
 using BTD_Mod_Helper.Extensions;
 using Il2CppAssets.Scripts.Models.GenericBehaviors;
@@ -8,12 +9,15 @@ using UnityEngine;
 
 namespace BloonFactory.Modules.Display
 {
-    internal class SimpleBloonDisplay : ModDisplay2D
+    internal class BloonDisplay : ModDisplay2D
     {
         protected override string TextureName => "BaseBloon";
         public override DisplayCategory DisplayCategory => DisplayCategory.Bloon;
         public override string BaseDisplay => "9d3c0064c3ace7448bf8fefa4a97a70f";
 
+        public override string Name => Guid;
+
+        public string Guid;
         public const int Width = 250;
         public const int Height = 250;
         public const float PixelsPerUnit = 20;
@@ -21,11 +25,12 @@ namespace BloonFactory.Modules.Display
         public Func<Texture2D> GenerateTexture;
 
         public BloonTemplate BloonTemplate;
-        public SimpleBloonDisplay(Func<Texture2D> getTexture, BloonTemplate template)
+        public BloonDisplay(Func<Texture2D> getTexture, BloonTemplate template, string id)
         {
             GenerateTexture = getTexture;
             BloonTemplate = template;
             mod = ModHelper.GetMod<BloonFactory>();
+            Guid = id;
 
             Register();
         }

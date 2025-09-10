@@ -1,5 +1,6 @@
 ﻿using BloonFactory.Modules;
 using BloonFactory.Modules.Core;
+using BloonFactory.Modules.Display;
 using BTD_Mod_Helper.Api;
 using BTD_Mod_Helper.Api.Bloons;
 using FactoryCore.API;
@@ -43,17 +44,33 @@ namespace BloonFactory
             BloonTemplate.LoadModules();
             foreach (var module in BloonTemplate.GetModulesOfType<BloonModule>())
             {
-                MelonLogger.Msg("Processing module");
-                module.currentModel = model;
-                module.currentRoundSet = roundset;
-                module.ProcessModule();
+                try
+                {
+                    MelonLogger.Msg("Processing module");
+                    module.currentModel = model;
+                    module.currentRoundSet = roundset;
+                    module.ProcessModule();
+                }
+                catch (Exception ex)
+                {
+                    MelonLogger.Error(ex);
+                }
             }
 
             foreach (var module in BloonTemplate.GetModulesOfType<TriggerModule>())
             {
-                module.currentModel = model;
-                module.ProcessModule();
+                try
+                {
+                    module.currentModel = model;
+                    module.ProcessModule();
+                }
+                catch (Exception ex)
+                {
+                    MelonLogger.Error(ex);
+                }
             }
+
+            DamageStateDisplayModule.DamageStateFix(model);
         }
         public override IEnumerable<ModContent> Load()
         {

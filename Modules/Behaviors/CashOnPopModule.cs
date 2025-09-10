@@ -27,8 +27,10 @@ namespace BloonFactory.Modules.Behaviors
         public override void ProcessModule()
         {
             var bloon = GetInputValue<BloonModel>("Bloon");
+
             if (bloon.HasBehavior<DistributeCashModel>())
                 bloon.RemoveBehavior<DistributeCashModel>();
+
             bloon.AddBehavior(new DistributeCashModel("CashOnDropModel", GetValue<int>("Cash")));
         }
     }

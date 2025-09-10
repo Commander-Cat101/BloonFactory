@@ -52,7 +52,9 @@ namespace BloonFactory.UI
         }
         public void CreateExtraContent(ModHelperPanel root)
         {
-            var button = root.AddButton(new Info("CreateNewBloon", 0, 250, 800, 300, new Vector2(0.5f, 0)), VanillaSprites.GreenBtnLong, new Action(() =>
+            var panel = root.AddPanel(new Info("Panel", InfoPreset.FillParent));
+
+            var newBloon = panel.AddButton(new Info("CreateNewBloon", 0, 250, 800, 300, new Vector2(0.5f, 0)), VanillaSprites.GreenBtnLong, new Action(() =>
             {
                 MenuManager.instance.buttonClickSound.Play("ClickSounds");
                 PopupScreen.instance.SafelyQueue(screen => screen.ShowSetNamePopup("Create Bloon", "Name of bloon to create.\n", new Action<string>(name =>
@@ -69,9 +71,11 @@ namespace BloonFactory.UI
                     tmpInputField.characterLimit = 20;
                 }));
             }));
-            button.AddText(new Info("Text", 0, 0, 700, 250), "Create", 120);
+            newBloon.AddText(new Info("Text", 0, 0, 700, 250), "Create", 120);
 
-            bottomGroupAnimator = button.GetComponent<Animator>();
+            //var openBrowser = panel.AddButton(new Info("BloonDownloader", 0, 0, 0, 0))
+
+            bottomGroupAnimator = panel.AddComponent<Animator>();
             bottomGroupAnimator.runtimeAnimatorController = Animations.PopupAnim;
             bottomGroupAnimator.speed = .55f;
             bottomGroupAnimator.Play("PopupScaleIn");

@@ -27,7 +27,6 @@ namespace BloonFactory.Modules.Behaviors
         {
             var bloon = GetInputValue<BloonModel>("Bloon");
             bloon.AddBehavior(new DamageReductionModel("DamageReduction", GetValue<int>("Percentage") / 100));
-            bloon.AddBehavior(new Il2CppAssets.Scripts.Models.Bloons.Behaviors.QuickEntryModel("QuickEntryModel", 5, 0.3f));
         }
     }
 }

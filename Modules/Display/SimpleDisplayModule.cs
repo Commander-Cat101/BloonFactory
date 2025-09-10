@@ -1,9 +1,11 @@
 ﻿using BloonFactory.LinkTypes;
+using BloonFactory.ModuleProperties;
 using BTD_Mod_Helper.Api;
 using BTD_Mod_Helper.Extensions;
 using FactoryCore.API;
 using FactoryCore.API.ModuleProperties;
 using FactoryCore.API.ModuleValues;
+using Harmony;
 using UnityEngine;
 
 namespace BloonFactory.Modules.Display
@@ -11,35 +13,40 @@ namespace BloonFactory.Modules.Display
     internal class SimpleDisplayModule : Module
     {
         public override string Name => "Simple Display";
+
+        internal BloonTexture bloonTexture;
         public override void GetLinkNodes()
         {
+
             AddInput<Visuals>("Visuals");
+            AddOutput<BloonTexture>("Texture", () => bloonTexture);
         }
         public override void GetModuleProperties()
         {
-            AddProperty(new ColorModuleProperty("Color", Color.white));
+            AddProperty(new BloonTextureModuleProperty(GenerateTexture));
         }
         public override void ProcessModule()
         {
             Visuals visuals = GetInputValue<Visuals>("Visuals");
             visuals.bloonModel.disallowCosmetics = true;
-            var display = new SimpleBloonDisplay(GenerateTexture, (BloonTemplate)Template);
+            var display = new BloonDisplay(GenerateTexture, (BloonTemplate)Template, Id.ToString());
             display.Apply(visuals.bloonModel);
         }
         public Texture2D GenerateTexture()
         {
-            var baseBloon = ModContent.GetTexture<BloonFactory>("BaseBloon");
-            Color color = GetValue<SavedColor>("Color");
-            var colors = baseBloon.GetPixels();
-            for (int i = 0; i < colors.Length; i++)
+            bloonTexture = new BloonTexture(); 
+            
+            var outputs = GetOutputsModules("Texture");
+            if (outputs.Count != 0)
             {
-                colors[i] = colors[i] * color;
+                outputs.ProcessAll();
             }
-            var texture = new Texture2D(baseBloon.width, baseBloon.height);
-            texture.SetPixels(colors);
-            texture.Apply();
-
-            return texture;
+            else
+            {
+                var baseBloon = ModContent.GetTexture<BloonFactory>("BaseBloon");
+                bloonTexture.texture = baseBloon;
+            }
+            return bloonTexture.texture;
         }
     }
 }
