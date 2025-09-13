@@ -73,12 +73,13 @@ namespace BloonFactory.UI
             }));
             newBloon.AddText(new Info("Text", 0, 0, 700, 250), "Create", 120);
 
-            //var openBrowser = panel.AddButton(new Info("BloonDownloader", 0, 0, 0, 0))
+            var openBrowser = panel.AddButton(new Info("BloonDownloader", 300, 300, 400, 400, new Vector2(0, 0)), VanillaSprites.AlternateBloonsBtn, new Action(() => ModGameMenu.Open<BloonBrowserUI>()));
+            openBrowser.AddText(new Info("Text", 0, -150, 400, 200), "Bloon\nBrowser").EnableAutoSizing();
 
             bottomGroupAnimator = panel.AddComponent<Animator>();
             bottomGroupAnimator.runtimeAnimatorController = Animations.PopupAnim;
             bottomGroupAnimator.speed = .55f;
-            bottomGroupAnimator.Play("PopupScaleIn");
+            bottomGroupAnimator.Play("PopupSlideIn");
         }
         public void AddContent()
         {
@@ -94,14 +95,14 @@ namespace BloonFactory.UI
             var panel = ModHelperPanel.Create(new Info("Template", 3300, 300), VanillaSprites.MainBGPanelBlue);
 
             panel.AddText(new Info("Name", 600, 0, 1000, 150, new Vector2(0, 0.5f)), template.Name, 100, Il2CppTMPro.TextAlignmentOptions.Left).EnableAutoSizing(150, 10);
-            panel.AddButton(new Info("Edit", 1500, 0, 200, 200), VanillaSprites.EditBtn, new Action(() => { OpenEditorWithTemplate(template); }));
-            panel.AddButton(new Info("Delete", 1250, 0, 200, 200), VanillaSprites.CloseBtn, new Action(() => { SerializationHandler.DeleteTemplate(template); AddContent(); }));
+            panel.AddButton(new Info("Edit", -150, 0, 200, 200, new Vector2(1, 0.5f)), VanillaSprites.EditBtn, new Action(() => { OpenEditorWithTemplate(template); }));
+            panel.AddButton(new Info("Delete", -400, 0, 200, 200, new Vector2(1, 0.5f)), VanillaSprites.CloseBtn, new Action(() => { SerializationHandler.DeleteTemplate(template); AddContent(); }));
 
             if (!template.IsLoaded)
                 panel.AddButton(new Info("NotLoaded", 0, 0, 100, 100, new Vector2(1, 1)), VanillaSprites.NoticeBtn,
                     new Action(() =>
                     {
-                        PopupScreen.instance.SafelyQueue(screen => screen.ShowPopup(PopupScreen.Placement.menuCenter, "This Bloon is unloaded", "This bloon is unloaded and wont show up ingame, restart the game to load this bloon.", null, "Ok", new Action(() => { ProcessHelper.RestartGame(); }), "Restart Game", Popup.TransitionAnim.Scale));
+                        PopupScreen.instance.SafelyQueue(screen => screen.ShowPopup(PopupScreen.Placement.menuCenter, "This Bloon is unloaded", "This bloon is unloaded and wont show up ingame, restart the game to load this bloon.", null, "Ok", null, null, Popup.TransitionAnim.Scale));
                     })
                 );
             return panel;

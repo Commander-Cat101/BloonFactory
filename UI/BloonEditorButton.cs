@@ -33,7 +33,7 @@ namespace BloonFactory.UI
             matchLocalPosition.transformToCopy = trophyStore.transform;
             matchLocalPosition.offset = new Vector3(0, -325);
 
-            var text = ModHelperText.Create(new Info("BloonEditor", 100, 150), "Bloon\nEditor");
+            var text = ModHelperText.Create(new Info("BloonEditor", 125, 175), "Bloon\nFactory");
             text.transform.GetComponent<NK_TextMeshProUGUI>().enableAutoSizing = true;
             text.transform.SetParent(modsButton.GetComponentInChildren<Button>().transform);
 

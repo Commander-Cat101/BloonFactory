@@ -1,6 +1,7 @@
 ﻿using BloonFactory.Modules.Core;
 using FactoryCore.API;
 using Il2CppSystem.Security.Cryptography;
+using MelonLoader;
 using MelonLoader.Utils;
 using Newtonsoft.Json;
 using System;
@@ -34,7 +35,7 @@ namespace BloonFactory
             var path = Path.Combine(FolderDirectory, template.Guid.ToString() + FileExtention);
             File.WriteAllText(path, content);
         }
-        internal static BloonTemplate LoadTemplate(string path)
+        internal static BloonTemplate GetTemplate(string path)
         {
             EnsureFolderExists();
 
@@ -44,13 +45,28 @@ namespace BloonFactory
             var content = JsonConvert.DeserializeObject<BloonTemplate>(File.ReadAllText(path), Settings);
             return content;
         }
+        internal static bool TryLoadTemplate(BloonTemplate template)
+        {
+            EnsureFolderExists();
+
+            if (Templates.Any(a => a.Guid == template.Guid))
+            {
+                MelonLogger.Msg("File already exists");
+                return false;
+            }
+
+            template.IsLoaded = false;
+            SaveTemplate(template);
+            Templates.Add(template);
+            return true;
+        }
         internal static void LoadAllTemplates()
         {
             EnsureFolderExists();
 
             foreach (var path in Directory.GetFiles(FolderDirectory).Where(f => f.EndsWith(".cstmbln")))
             {
-                var template = LoadTemplate(path);
+                var template = GetTemplate(path);
                 if (!Templates.Any(a => a.Guid == template.Guid))
                 {
                     template.LoadModules();

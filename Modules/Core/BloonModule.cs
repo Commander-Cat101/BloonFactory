@@ -21,7 +21,6 @@ namespace BloonFactory.Modules.Core
         public RoundSetModel currentRoundSet;
         public override void GetModuleProperties()
         {
-            AddProperty(new StringModuleProperty("Name", "Custom Bloon", 20));
             AddProperty(new IntModuleProperty("Health", 1, 1, int.MaxValue));
             AddProperty(new FloatModuleProperty("Speed", 25, 1, float.MaxValue));
             AddProperty(new IntModuleProperty("Damage", 1, 1, int.MaxValue));
