@@ -73,8 +73,6 @@ namespace BloonFactory.UI
             }));
             newBloon.AddText(new Info("Text", 0, 0, 700, 250), "Create", 120);
 
-            //var openBrowser = panel.AddButton(new Info("BloonDownloader", 0, 0, 0, 0))
-
             bottomGroupAnimator = panel.AddComponent<Animator>();
             bottomGroupAnimator.runtimeAnimatorController = Animations.PopupAnim;
             bottomGroupAnimator.speed = .55f;

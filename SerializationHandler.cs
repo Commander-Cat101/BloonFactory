@@ -1,14 +1,17 @@
 ﻿using BloonFactory.Modules.Core;
+using BTD_Mod_Helper;
+using BTD_Mod_Helper.Api;
+using BTD_Mod_Helper.Extensions;
 using FactoryCore.API;
 using Il2CppSystem.Security.Cryptography;
+using MelonLoader;
 using MelonLoader.Utils;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Reflection;
 
 namespace BloonFactory
 {
@@ -53,7 +56,7 @@ namespace BloonFactory
                 var template = LoadTemplate(path);
                 if (!Templates.Any(a => a.Guid == template.Guid))
                 {
-                    template.LoadModules();
+                    template.SetReferences();
                     Templates.Add(template);
                 }
             }
@@ -62,9 +65,16 @@ namespace BloonFactory
         internal static BloonTemplate CreateTemplate(string name)
         {
             EnsureFolderExists();
+            foreach (string thing in Assembly.GetCallingAssembly().GetManifestResourceNames())
+            {
+                MelonLogger.Msg(thing);
+            }
+            var template = JsonConvert.DeserializeObject<BloonTemplate>(Assembly.GetCallingAssembly().GetEmbeddedText("DefaultTemplate" + FileExtention), Settings);
 
-            var template = new BloonTemplate() { IsLoaded = false, Guid = Guid.NewGuid(), Name = name };
-            template.AddModule(new BloonModule());
+            template.IsLoaded = false;
+            template.Name = name;
+            template.Guid = Guid.NewGuid();
+            template.SetReferences();
             SaveTemplate(template);
             Templates.Add(template);
             return template;

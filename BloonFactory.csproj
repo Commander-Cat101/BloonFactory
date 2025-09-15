@@ -10,7 +10,13 @@
         <DebugType>embedded</DebugType>
     </PropertyGroup>
     <ItemGroup>
+      <None Remove="Assets\DefaultTemplate.cstmbln" />
+    </ItemGroup>
+    <ItemGroup>
         <Content Include=".github\workflows\build.yml" />
+    </ItemGroup>
+    <ItemGroup>
+      <EmbeddedResource Include="Assets\DefaultTemplate.cstmbln" />
     </ItemGroup>
     <ItemGroup>
       <Reference Include="FactoryCore">

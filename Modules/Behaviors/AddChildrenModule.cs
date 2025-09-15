@@ -3,18 +3,20 @@ using BTD_Mod_Helper.Extensions;
 using FactoryCore.API;
 using FactoryCore.API.ModuleProperties;
 using FactoryCore.API.ModuleValues;
+using Il2CppAssets.Scripts.Models.Bloons;
 using Il2CppAssets.Scripts.Models.Bloons.Behaviors;
 using Il2CppAssets.Scripts.Unity;
 using Il2CppInterop.Runtime.InteropTypes.Arrays;
 using MelonLoader;
 using System;
 using System.Linq;
+using static Il2CppNinjaKiwi.GUTS.Models.BossRushRandomizerSettings;
 
-namespace BloonFactory.Modules.Actions
+namespace BloonFactory.Modules.Behaviors
 {
-    internal class SpawnBloonsActionModule : Module
+    internal class AddChildrenModule : Module
     {
-        public override string Name => "Spawn Bloons";
+        public override string Name => "Add Children";
         public override void GetModuleProperties()
         {
             AddProperty(new EnumModuleProperty("Bloon", Game.instance.model.bloons.Select(a => a.name).ToArray(), 0, new Action<int>((value) =>
@@ -22,34 +24,28 @@ namespace BloonFactory.Modules.Actions
                 SetValue(Game.instance.model.bloons[GetValue<int>("Bloon")].id, "BloonId");
             })));
             AddProperty(new IntModuleProperty("Count", 10, 0, int.MaxValue));
-            AddProperty(new FloatModuleProperty("Distance Ahead", 45, float.MinValue, float.MaxValue));
 
             if (!HasValue("BloonId"))
-                SetValue(Game.instance.model.bloons[0].id, "BloonId");
+                SetValue("", "BloonId");
         }
         public override void GetLinkNodes()
         {
-            AddInput<Trigger>("Trigger");
+            AddInput<BloonModel>("Bloon");
         }
 
         public override void ProcessModule()
         {
             try
             {
-                var trigger = GetInputValue<Trigger>("Trigger");
                 string id = GetValue<string>("BloonId");
-
-                if (!Game.instance.model.bloons.Any(a => a.id == id))
-                    return;
-
-                trigger.bloonModel.AddBehavior(new SpawnBloonsActionModel("SpawnBloonsActionModel", Id.ToString(), id, GetValue<int>("Count"), 0.02f
-                    , GetValue<float>("Distance Ahead"), 0, 0, new Il2CppStringArray(["BloonariusAttackSpew"]), new Il2CppStringArray(["BloonariusAttackSpewMoab"]), 1.5f, false, "Bloonarius"));
+                if (Game.instance.model.bloons.Any(a => a.id == id))
+                    GetInputValue<BloonModel>("Bloon").AddToChildren(id, GetValue<int>("Count"));
             }
             catch (Exception ex)
             {
                 MelonLogger.Error($"Failed to add action. {ex}");
             }
-            
+
         }
     }
 }

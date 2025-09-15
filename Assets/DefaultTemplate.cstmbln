@@ -1,0 +1,153 @@
+{
+  "Guid": "1119f64d-4989-44d4-955d-8f11f37e7c25",
+  "Name": "Bloon",
+  "modules": [
+    {
+      "$type": "BloonFactory.Modules.Core.BloonModule, BloonFactory",
+      "Id": "ad6bb6d7-748a-4b15-8c0d-05947da96450",
+      "PropertiesData": {
+        "Name": "Custom Bloon",
+        "Health": 5,
+        "Speed": 18.0,
+        "Damage": 1
+      },
+      "Outputs": [
+        {
+          "Name": "Visuals",
+          "Id": "ee8871a8-9a12-4985-99a2-d7317059e68c",
+          "Type": "BloonFactory.LinkTypes.Visuals, BloonFactory, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+          "InputsGuids": [
+            "bc5c65f3-ec44-4e67-b83b-8214edc22586"
+          ]
+        },
+        {
+          "Name": "Bloon",
+          "Id": "4246f3a7-3c85-45f0-8b7a-9858939dc9b9",
+          "Type": "Il2CppAssets.Scripts.Models.Bloons.BloonModel, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null",
+          "InputsGuids": [
+            "938505a6-f385-49b3-8b79-2fbe48170148",
+            "f2b42e3a-73b5-4185-9573-a76d341f69b0"
+          ]
+        },
+        {
+          "Name": "Roundset",
+          "Id": "987491a9-97a7-4667-b18c-7ac7f49db8bc",
+          "Type": "Il2CppAssets.Scripts.Models.Rounds.RoundSetModel, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null",
+          "InputsGuids": []
+        }
+      ],
+      "Inputs": [],
+      "XPosition": 0,
+      "YPosition": 0,
+      "Name": "Bloon",
+      "IsRemovable": false,
+      "Description": "Adds the base functionality of your custom bloon."
+    },
+    {
+      "$type": "BloonFactory.Modules.Behaviors.AddChildrenModule, BloonFactory",
+      "Id": "92558238-e733-4366-bfd3-fcf73f7493bd",
+      "PropertiesData": {
+        "Bloon": 134,
+        "Count": 3,
+        "BloonId": "Red"
+      },
+      "Outputs": [],
+      "Inputs": [
+        {
+          "Name": "Bloon",
+          "Id": "938505a6-f385-49b3-8b79-2fbe48170148",
+          "Type": "Il2CppAssets.Scripts.Models.Bloons.BloonModel, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null",
+          "OutputGuid": "4246f3a7-3c85-45f0-8b7a-9858939dc9b9"
+        }
+      ],
+      "XPosition": 2427.6753,
+      "YPosition": -904.11255,
+      "Name": "Add Children",
+      "IsRemovable": true,
+      "Description": ""
+    },
+    {
+      "$type": "BloonFactory.Modules.Display.SimpleDisplayModule, BloonFactory",
+      "Id": "6963cfac-503f-4e23-a3b6-57a4d33d685e",
+      "PropertiesData": {},
+      "Outputs": [
+        {
+          "Name": "Texture",
+          "Id": "03fb67ce-aeaa-4a51-970d-3b4190956755",
+          "Type": "BloonFactory.LinkTypes.BloonTexture, BloonFactory, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+          "InputsGuids": [
+            "7b5caf92-8aa8-40eb-b5ae-fa0a0e79e5cc"
+          ]
+        }
+      ],
+      "Inputs": [
+        {
+          "Name": "Visuals",
+          "Id": "bc5c65f3-ec44-4e67-b83b-8214edc22586",
+          "Type": "BloonFactory.LinkTypes.Visuals, BloonFactory, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+          "OutputGuid": "ee8871a8-9a12-4985-99a2-d7317059e68c"
+        }
+      ],
+      "XPosition": 2429.0137,
+      "YPosition": -161.29633,
+      "Name": "Simple Display",
+      "IsRemovable": true,
+      "Description": ""
+    },
+    {
+      "$type": "BloonFactory.Modules.Display.BloonTextureModule, BloonFactory",
+      "Id": "ae92b115-beb5-49c1-9858-22237c129e94",
+      "PropertiesData": {
+        "Color": {
+          "$type": "FactoryCore.API.ModuleProperties.SavedColor, FactoryCore",
+          "r": 1.0,
+          "g": 1.0,
+          "b": 1.0,
+          "a": 1.0
+        }
+      },
+      "Outputs": [
+        {
+          "Name": "Texture",
+          "Id": "561198d3-c28b-4e10-8d7c-d13c8aabe2a2",
+          "Type": "BloonFactory.LinkTypes.BloonTexture, BloonFactory, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+          "InputsGuids": []
+        }
+      ],
+      "Inputs": [
+        {
+          "Name": "Texture",
+          "Id": "7b5caf92-8aa8-40eb-b5ae-fa0a0e79e5cc",
+          "Type": "BloonFactory.LinkTypes.BloonTexture, BloonFactory, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+          "OutputGuid": "03fb67ce-aeaa-4a51-970d-3b4190956755"
+        }
+      ],
+      "XPosition": 3968.8193,
+      "YPosition": -185.531,
+      "Name": "Bloon Texture",
+      "IsRemovable": true,
+      "Description": ""
+    },
+    {
+      "$type": "BloonFactory.Modules.Behaviors.CashOnPopModule, BloonFactory",
+      "Id": "948a1fca-47a0-4d89-a391-b7b517a96a70",
+      "PropertiesData": {
+        "Cash": 1
+      },
+      "Outputs": [],
+      "Inputs": [
+        {
+          "Name": "Bloon",
+          "Id": "f2b42e3a-73b5-4185-9573-a76d341f69b0",
+          "Type": "Il2CppAssets.Scripts.Models.Bloons.BloonModel, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null",
+          "OutputGuid": "4246f3a7-3c85-45f0-8b7a-9858939dc9b9"
+        }
+      ],
+      "XPosition": 2431.2456,
+      "YPosition": -1327.9586,
+      "Name": "Cash On Pop",
+      "IsRemovable": true,
+      "Description": ""
+    }
+  ]
+}
