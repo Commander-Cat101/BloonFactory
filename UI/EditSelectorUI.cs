@@ -9,9 +9,12 @@ using Il2CppAssets.Scripts.Unity.UI_New.InGame.RightMenu.Powers;
 using Il2CppAssets.Scripts.Unity.UI_New.Main.PowersSelect;
 using Il2CppAssets.Scripts.Unity.UI_New.Popups;
 using Il2CppAssets.Scripts.Unity.UI_New.Settings;
+using Il2CppNewtonsoft.Json;
 using Il2CppNinjaKiwi.Common;
+using NfdSharp;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -47,14 +50,14 @@ namespace BloonFactory.UI
             mainPanelAnimator = panel.AddComponent<Animator>();
             mainPanelAnimator.runtimeAnimatorController = Animations.PopupAnim;
             mainPanelAnimator.speed = .55f;
-            mainPanelAnimator.Play("PopupSlideIn");
+            mainPanelAnimator.Play("PopupScaleIn");
             AddContent();
         }
         public void CreateExtraContent(ModHelperPanel root)
         {
             var panel = root.AddPanel(new Info("Panel", InfoPreset.FillParent));
 
-            var newBloon = panel.AddButton(new Info("CreateNewBloon", 0, 250, 800, 300, new Vector2(0.5f, 0)), VanillaSprites.GreenBtnLong, new Action(() =>
+            var newBloon = panel.AddButton(new Info("CreateNewBloon", 450, 250, 800, 300, new Vector2(0.5f, 0)), VanillaSprites.GreenBtnLong, new Action(() =>
             {
                 MenuManager.instance.buttonClickSound.Play("ClickSounds");
                 PopupScreen.instance.SafelyQueue(screen => screen.ShowSetNamePopup("Create Bloon", "Name of bloon to create.\n", new Action<string>(name =>
@@ -73,10 +76,34 @@ namespace BloonFactory.UI
             }));
             newBloon.AddText(new Info("Text", 0, 0, 700, 250), "Create", 120);
 
+            var importBloon = panel.AddButton(new Info("ImportBloon", -450, 250, 800, 300, new Vector2(0.5f, 0)), VanillaSprites.GreenBtnLong, new Action(() =>
+            {
+                MenuManager.instance.buttonClickSound.Play("ClickSounds");
+
+                FileDialogHelper.PrepareNativeDlls();
+                
+                if (Nfd.OpenDialog("cstmbln", "", out string path) == Nfd.NfdResult.NFD_OKAY)
+                {
+                    try
+                    {
+                        var template = SerializationHandler.GetTemplateFromPath(path);
+                        if (SerializationHandler.ContainGuid(template.Guid))
+                            return;
+                        SerializationHandler.LoadTemplate(template);
+                        SerializationHandler.SaveTemplate(template);
+                    }
+                    catch 
+                    {
+                        PopupScreen.instance.SafelyQueue(screen => screen.ShowPopup(PopupScreen.Placement.menuCenter, "Failed Import.", "Failed to import bloon.", null, "Ok", null, null, Popup.TransitionAnim.Scale));
+                    }
+                }
+            }));
+            importBloon.AddText(new Info("Text", 0, 0, 700, 250), "Import", 120);
+
             bottomGroupAnimator = panel.AddComponent<Animator>();
             bottomGroupAnimator.runtimeAnimatorController = Animations.PopupAnim;
             bottomGroupAnimator.speed = .55f;
-            bottomGroupAnimator.Play("PopupScaleIn");
+            bottomGroupAnimator.Play("PopupSlideIn");
         }
         public void AddContent()
         {

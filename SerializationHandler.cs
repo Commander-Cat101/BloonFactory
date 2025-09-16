@@ -37,7 +37,11 @@ namespace BloonFactory
             var path = Path.Combine(FolderDirectory, template.Guid.ToString() + FileExtention);
             File.WriteAllText(path, content);
         }
-        internal static BloonTemplate LoadTemplate(string path)
+        internal static bool ContainGuid(Guid guid)
+        {
+            return Templates.Any(a => a.Guid == guid);
+        }
+        internal static BloonTemplate GetTemplateFromPath(string path)
         {
             EnsureFolderExists();
 
@@ -47,18 +51,23 @@ namespace BloonFactory
             var content = JsonConvert.DeserializeObject<BloonTemplate>(File.ReadAllText(path), Settings);
             return content;
         }
+        internal static void LoadTemplate(BloonTemplate template)
+        {
+            if (!ContainGuid(template.Guid))
+            {
+                template.SetReferences();
+                Templates.Add(template);
+            }
+            
+        }
         internal static void LoadAllTemplates()
         {
             EnsureFolderExists();
 
             foreach (var path in Directory.GetFiles(FolderDirectory).Where(f => f.EndsWith(".cstmbln")))
             {
-                var template = LoadTemplate(path);
-                if (!Templates.Any(a => a.Guid == template.Guid))
-                {
-                    template.SetReferences();
-                    Templates.Add(template);
-                }
+                var template = GetTemplateFromPath(path);
+                LoadTemplate(template);
             }
             HasLoaded = true;
         }
