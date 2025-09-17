@@ -1,4 +1,5 @@
 ﻿using BloonFactory.Categories;
+using BloonFactory.Modules.Core;
 using FactoryCore.API;
 using FactoryCore.UI;
 using System;
@@ -11,6 +12,7 @@ namespace BloonFactory.UI
 {
     internal class BloonEditorUI : EditorUI
     {
+        public override Type CenteredModule => typeof(BloonModule);
         public override List<Category> Categories => [new TagsCategory(), new BehaviorsCategory(), new TriggerCategory(), new ActionCategory(), new DisplayCategory(), new SpawningCategory() ];
 
         public override void SaveTemplate()

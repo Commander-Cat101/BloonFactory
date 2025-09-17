@@ -20,17 +20,12 @@ namespace BloonFactory
 {
     internal static class ServerHandler
     {
-        public const string URL = "http://localhost:8000/";
+        public const string URL = "https://server.bloonfactory.org/";
         private static HttpClient client = new HttpClient();
-        internal static async Task Ping()
-        {
-            HttpResponseMessage response = await client.GetAsync(URL + "ping");
-            response.EnsureSuccessStatusCode();
-            byte[] bytes = await response.Content.ReadAsByteArrayAsync();
-            MelonLogger.Msg(Encoding.UTF8.GetString(bytes));
-        }
         internal static async Task<PageUpdateRequest> RequestPageUpdate()
         {
+            MelonLogger.Msg("Requested page update from server ({0})", URL + "getPage");
+
             HttpResponseMessage response = await client.GetAsync(URL + "getPage");
             response.EnsureSuccessStatusCode();
             byte[] bytes = await response.Content.ReadAsByteArrayAsync();
@@ -41,6 +36,7 @@ namespace BloonFactory
         internal static async Task<BloonTemplate> DownloadTemplate(Guid guid)
         {
             HttpResponseMessage response = await client.GetAsync(URL + $"getTemplate={guid.ToString()}");
+            MelonLogger.Msg($"Downloading template {guid.ToString()}");
             response.EnsureSuccessStatusCode();
             byte[] bytes = await response.Content.ReadAsByteArrayAsync();
 
