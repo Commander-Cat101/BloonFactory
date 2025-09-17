@@ -24,7 +24,7 @@ namespace BloonFactory
         private static HttpClient client = new HttpClient();
         internal static async Task<PageUpdateRequest> RequestPageUpdate()
         {
-            MelonLogger.Msg("Requested page update from server ({0})", URL + "getPage");
+            MelonLogger.Msg("Requested page update from server");
 
             HttpResponseMessage response = await client.GetAsync(URL + "getPage");
             response.EnsureSuccessStatusCode();
@@ -36,7 +36,7 @@ namespace BloonFactory
         internal static async Task<BloonTemplate> DownloadTemplate(Guid guid)
         {
             HttpResponseMessage response = await client.GetAsync(URL + $"getTemplate={guid.ToString()}");
-            MelonLogger.Msg($"Downloading template {guid.ToString()}");
+            MelonLogger.Msg($"Requested template from server ({guid.ToString()})");
             response.EnsureSuccessStatusCode();
             byte[] bytes = await response.Content.ReadAsByteArrayAsync();
 
@@ -52,7 +52,29 @@ namespace BloonFactory
     {
         public string Name;
         public Guid Guid;
-        public int LikeCount;
-        public int FileSize;
+        public string Creator;
+        public byte Category;
+
+        [JsonIgnore]
+        public BloonCategory CategoryEnum => (BloonCategory)Category;
+    }
+    public enum BloonCategory
+    {
+        Boss,
+        VanillaPlus,
+        Modded
+    }
+    public static class CategoryExtensions
+    {
+        public static string ToFriendlyString(this BloonCategory category)
+        {
+            return category switch
+            {
+                BloonCategory.Boss => "Boss",
+                BloonCategory.VanillaPlus => "Vanilla+",
+                BloonCategory.Modded => "Modded",
+                _ => "Unknown",
+            };
+        }
     }
 }

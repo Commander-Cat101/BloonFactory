@@ -1,6 +1,7 @@
 ﻿using BTD_Mod_Helper.Api;
 using BTD_Mod_Helper.Api.Components;
 using BTD_Mod_Helper.Api.Enums;
+using Il2CppAssets.Scripts.GameEditor.UI.PopupPanels;
 using Il2CppTMPro;
 using MelonLoader;
 using System;
@@ -22,39 +23,21 @@ namespace BloonFactory.UI
                 return null;
 
             var panel = ModHelperPanel.Create(new Info("Panel", 3600, 250), VanillaSprites.MainBGPanelBlue);
-            panel.AddText(new Info("Name", 575, 0, 1000, 200, new Vector2(0, 0.5f)), entry.Name, 100, TextAlignmentOptions.Left).EnableAutoSizing(120, 20);
+            var name = panel.AddText(new Info("Name", 850, 0, 1500, 200, new Vector2(0, 0.5f)), $"{entry.Name}  by  {entry.Creator}", 100, TextAlignmentOptions.Left);
+            name.EnableAutoSizing(100, 20);
 
             panel.AddButton(new Info("Download", -125, 0, 200, 200, new Vector2(1, 0.5f)), ModHelperSprites.DownloadBtn, new Action(() =>
             {
                 Download(entry.Guid);
             }));
-            panel.AddText(new Info("FileSize", -375, 0, 450, 200, new Vector2(1, 0.5f)), ByteArrayLengthToSizeText(entry.FileSize), 120, TextAlignmentOptions.Left).EnableAutoSizing(120, 20);
 
-            /*panel.AddButton(new Info("Heart", -675, 0, 200, 200, new Vector2(1, 0.5f)), ModContent.GetSpriteReference<BloonFactory>("EmptyLikeIcon").guidRef, new Action(() =>
-            {
-
-            }));
-            panel.AddText(new Info("HeartCount", -450, 0, 200, 200, new Vector2(1, 0.5f)), entry.LikeCount.ToString(), 120, TextAlignmentOptions.Left);*/
+            panel.AddText(new Info("Category", -600, 0, 500, 200, new Vector2(1, 0.5f)), entry.CategoryEnum.ToFriendlyString(), 100, TextAlignmentOptions.Right).EnableAutoSizing(100, 20);
 
             return panel;
         }
-        private static string ByteArrayLengthToSizeText(int length)
-        {
-            if (length >= 1_000_000)
-            {
-                return $"{Math.Round((double)(length / 1_000_000), 2)} MB";
-            }
-            if (length >= 1_000)
-            {
-                return $"{Math.Round((double)(length / 1_000), 2)} KB";
-            }
-            else
-            {
-                return $"{length} B";
-            }
-        }
         private static async void Download(Guid guid)
         {
+            if ()
             BloonTemplate template = await ServerHandler.DownloadTemplate(guid);
             SerializationHandler.TryLoadTemplate(template);
         }

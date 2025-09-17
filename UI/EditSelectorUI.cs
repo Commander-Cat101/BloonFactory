@@ -99,7 +99,7 @@ namespace BloonFactory.UI
             panel.AddButton(new Info("Delete", -400, 0, 200, 200, new Vector2(1, 0.5f)), VanillaSprites.CloseBtn, new Action(() => { SerializationHandler.DeleteTemplate(template); AddContent(); }));
 
             if (!template.IsLoaded)
-                panel.AddButton(new Info("NotLoaded", 0, 0, 100, 100, new Vector2(1, 1)), VanillaSprites.NoticeBtn,
+                panel.AddButton(new Info("NotLoaded", -20, -20, 100, 100, new Vector2(1, 1)), VanillaSprites.NoticeBtn,
                     new Action(() =>
                     {
                         PopupScreen.instance.SafelyQueue(screen => screen.ShowPopup(PopupScreen.Placement.menuCenter, "This Bloon is unloaded", "This bloon is unloaded and wont show up ingame, restart the game to load this bloon.", null, "Ok", null, null, Popup.TransitionAnim.Scale));
