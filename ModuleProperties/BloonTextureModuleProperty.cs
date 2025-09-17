@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Assertions;
 using static Il2CppNinjaKiwi.GUTS.Models.BossRushRandomizerSettings;
+using TaskScheduler = BTD_Mod_Helper.Api.TaskScheduler;
 
 namespace BloonFactory.ModuleProperties
 {
@@ -32,7 +33,10 @@ namespace BloonFactory.ModuleProperties
             {
                 UpdateImage(image);
             }));
-            UpdateImage(image);
+            TaskScheduler.ScheduleTask(() =>
+            {
+                UpdateImage(image);
+            }, ScheduleType.WaitForFrames, 5);
 
             return panel;
         }

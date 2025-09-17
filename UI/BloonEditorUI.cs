@@ -15,6 +15,8 @@ namespace BloonFactory.UI
         public override Type CenteredModule => typeof(BloonModule);
         public override List<Category> Categories => [new TagsCategory(), new BehaviorsCategory(), new TriggerCategory(), new ActionCategory(), new DisplayCategory(), new SpawningCategory() ];
 
+        public override Type CenteredModule => typeof(BloonModule);
+
         public override void SaveTemplate()
         {
             SerializationHandler.SaveTemplate((BloonTemplate)Template);

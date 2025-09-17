@@ -12,7 +12,7 @@ namespace BloonFactory.Modules.Tags
 {
     internal class FortifiedTagModule : Module
     {
-        public override string Name => "Camo Tag";
+        public override string Name => "Fortified Tag";
 
         public override void GetModuleProperties()
         {

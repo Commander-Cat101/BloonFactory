@@ -1,4 +1,7 @@
 ﻿using BloonFactory.Modules.Core;
+using BTD_Mod_Helper;
+using BTD_Mod_Helper.Api;
+using BTD_Mod_Helper.Extensions;
 using FactoryCore.API;
 using Il2CppSystem.Security.Cryptography;
 using MelonLoader;
@@ -8,8 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Reflection;
 
 namespace BloonFactory
 {
@@ -35,7 +37,11 @@ namespace BloonFactory
             var path = Path.Combine(FolderDirectory, template.Guid.ToString() + FileExtention);
             File.WriteAllText(path, content);
         }
-        internal static BloonTemplate GetTemplate(string path)
+        internal static bool ContainGuid(Guid guid)
+        {
+            return Templates.Any(a => a.Guid == guid);
+        }
+        internal static BloonTemplate GetTemplateFromPath(string path)
         {
             EnsureFolderExists();
 
@@ -45,20 +51,14 @@ namespace BloonFactory
             var content = JsonConvert.DeserializeObject<BloonTemplate>(File.ReadAllText(path), Settings);
             return content;
         }
-        internal static bool TryLoadTemplate(BloonTemplate template)
+        internal static void LoadTemplate(BloonTemplate template)
         {
-            EnsureFolderExists();
-
-            if (Templates.Any(a => a.Guid == template.Guid))
+            if (!ContainGuid(template.Guid))
             {
-                MelonLogger.Msg("File already exists");
-                return false;
+                template.SetReferences();
+                Templates.Add(template);
             }
-
-            template.IsLoaded = false;
-            SaveTemplate(template);
-            Templates.Add(template);
-            return true;
+            
         }
         internal static void LoadAllTemplates()
         {
@@ -66,21 +66,24 @@ namespace BloonFactory
 
             foreach (var path in Directory.GetFiles(FolderDirectory).Where(f => f.EndsWith(".cstmbln")))
             {
-                var template = GetTemplate(path);
-                if (!Templates.Any(a => a.Guid == template.Guid))
-                {
-                    template.LoadModules();
-                    Templates.Add(template);
-                }
+                var template = GetTemplateFromPath(path);
+                LoadTemplate(template);
             }
             HasLoaded = true;
         }
         internal static BloonTemplate CreateTemplate(string name)
         {
             EnsureFolderExists();
+            foreach (string thing in Assembly.GetCallingAssembly().GetManifestResourceNames())
+            {
+                MelonLogger.Msg(thing);
+            }
+            var template = JsonConvert.DeserializeObject<BloonTemplate>(Assembly.GetCallingAssembly().GetEmbeddedText("DefaultTemplate" + FileExtention), Settings);
 
-            var template = new BloonTemplate() { IsLoaded = false, Guid = Guid.NewGuid(), Name = name };
-            template.AddModule(new BloonModule());
+            template.IsLoaded = false;
+            template.Name = name;
+            template.Guid = Guid.NewGuid();
+            template.SetReferences();
             SaveTemplate(template);
             Templates.Add(template);
             return template;

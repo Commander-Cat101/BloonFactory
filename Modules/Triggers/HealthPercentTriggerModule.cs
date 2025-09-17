@@ -4,6 +4,7 @@ using FactoryCore.API;
 using FactoryCore.API.ModuleValues;
 using Il2CppAssets.Scripts.Models.Bloons.Behaviors;
 using Il2CppInterop.Runtime.InteropTypes.Arrays;
+using MelonLoader;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +19,6 @@ namespace BloonFactory.Modules.Triggers
 
         public override void GetModuleProperties()
         {
-            AddProperty(new FloatModuleProperty("Interval", 5, 0, float.MaxValue));
             AddProperty(new IntSliderModuleProperty("Percentage", 50, 0, 100));
         }
 
@@ -30,7 +30,9 @@ namespace BloonFactory.Modules.Triggers
         public override void ProcessModule()
         {
             var guids = new Il2CppStringArray(GetOutputsModules("Trigger").AsGuids());
-            currentModel.AddBehavior(new HealthPercentTriggerModel("HealthPercentTriggerModel", false, new float[GetValue<int>("Percentage") / 100], guids, true));
+
+            float value = (float)GetValue<int>("Percentage") / 100;
+            currentModel.AddBehavior(new HealthPercentTriggerModel("HealthPercentTriggerModel", false, new float[] { value }, guids, true));
 
             GetOutputsModules("Trigger").ProcessAll();
         }

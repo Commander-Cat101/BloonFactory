@@ -17,7 +17,6 @@ namespace BloonFactory.Modules.Display
         internal BloonTexture bloonTexture;
         public override void GetLinkNodes()
         {
-
             AddInput<Visuals>("Visuals");
             AddOutput<BloonTexture>("Texture", () => bloonTexture);
         }
@@ -34,18 +33,13 @@ namespace BloonFactory.Modules.Display
         }
         public Texture2D GenerateTexture()
         {
+            var outputs = GetOutputsModules("Texture");
+
             bloonTexture = new BloonTexture(); 
             
-            var outputs = GetOutputsModules("Texture");
-            if (outputs.Count != 0)
-            {
-                outputs.ProcessAll();
-            }
-            else
-            {
-                var baseBloon = ModContent.GetTexture<BloonFactory>("BaseBloon");
-                bloonTexture.texture = baseBloon;
-            }
+            var baseBloon = ModContent.GetTexture<BloonFactory>("BaseBloon");
+            bloonTexture.texture = baseBloon;
+            outputs.ProcessAll();
             return bloonTexture.texture;
         }
     }

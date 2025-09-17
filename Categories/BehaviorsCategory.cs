@@ -12,6 +12,6 @@ namespace BloonFactory.Categories
     {
         public override string Name => "Behaviors";
 
-        public override Type[] Modules => [typeof(DamageReductionModule), typeof(QuickEntryModule), typeof(SpeedUpNearbyBloonsModule), typeof(CashOnPopModule)];
+        public override Type[] Modules => [typeof(DamageReductionModule), typeof(QuickEntryModule), typeof(SpeedUpNearbyBloonsModule), typeof(CashOnPopModule), typeof(AddChildrenModule)];
     }
 }
