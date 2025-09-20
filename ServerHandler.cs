@@ -1,4 +1,7 @@
 ﻿
+using BTD_Mod_Helper.Extensions;
+using Il2CppAssets.Scripts.Unity;
+using Il2CppAssets.Scripts.Unity.UI_New.InGame;
 using JetBrains.Annotations;
 using MelonLoader;
 using Newtonsoft.Json;
@@ -14,7 +17,7 @@ using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
-using static BloonFactory.UI.BloonBrowserBloonPanel;
+using static BloonFactory.UI.BloonBrowserMenuPanel;
 
 namespace BloonFactory
 {
@@ -24,8 +27,6 @@ namespace BloonFactory
         private static HttpClient client = new HttpClient();
         internal static async Task<PageUpdateRequest> RequestPageUpdate()
         {
-            MelonLogger.Msg("Requested page update from server");
-
             HttpResponseMessage response = await client.GetAsync(URL + "getPage");
             response.EnsureSuccessStatusCode();
             byte[] bytes = await response.Content.ReadAsByteArrayAsync();
@@ -43,10 +44,48 @@ namespace BloonFactory
             var obj = JsonConvert.DeserializeObject<BloonTemplate>(Encoding.UTF8.GetString(bytes), SerializationHandler.Settings);
             return obj;
         }
+        internal static async Task<(bool success, string errorCode)> UploadTemplate(BloonTemplate template, BloonCategory category, string description)
+        {
+            string creator = Game.Player.LiNKAccount?.DisplayName;
+            if (string.IsNullOrEmpty(creator))
+            {
+                MelonLogger.Msg("You must be logged into a NK account to upload a template.");
+                return (false, "You must be logged into a NK account to upload a template.");
+            }
+            MelonLogger.Msg($"Uploading template to server ({template.Name})");
+            UploadTemplateRequest request = new UploadTemplateRequest()
+            {
+                Name = template.Name,
+                Guid = template.Guid,
+                Creator = creator,
+                Category = (byte)category,
+                Description = description,
+                TemplateJson = JsonConvert.SerializeObject(template, SerializationHandler.Settings)
+            };
+
+            HttpResponseMessage response = await client.PostAsync(URL + "uploadTemplate", new StringContent(JsonConvert.SerializeObject(request)));
+            
+            if (!response.IsSuccessStatusCode)
+            {
+                byte[] bytes = await response.Content.ReadAsByteArrayAsync();
+                return (false, Encoding.UTF8.GetString(bytes));
+            }
+            return (true, "");
+        }
     }
     public class PageUpdateRequest
     {
         public List<BloonBrowserEntry> Data;
+    }
+    public class UploadTemplateRequest
+    {
+        public string Name;
+        public Guid Guid;
+        public string Creator;
+        public byte Category;
+        public string Description;
+
+        public string TemplateJson;
     }
     public class BloonBrowserEntry
     {
@@ -54,11 +93,15 @@ namespace BloonFactory
         public Guid Guid;
         public string Creator;
         public byte Category;
+        public string Description;
+
+        public DateTime UploadTime = DateTime.Now;
+        public int Downloads = 0;
 
         [JsonIgnore]
         public BloonCategory CategoryEnum => (BloonCategory)Category;
     }
-    public enum BloonCategory
+    public enum BloonCategory : byte
     {
         Boss,
         VanillaPlus,
@@ -66,6 +109,12 @@ namespace BloonFactory
     }
     public static class CategoryExtensions
     {
+        public static string[] BloonCategoryNames =
+        [
+            "Boss",
+            "Vanilla+",
+            "Modded"
+        ];
         public static string ToFriendlyString(this BloonCategory category)
         {
             return category switch

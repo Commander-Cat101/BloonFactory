@@ -73,6 +73,7 @@ namespace BloonFactory
             }
 
             DamageStateDisplayModule.DamageStateFix(model);
+            
         }
         public override IEnumerable<ModContent> Load()
         {

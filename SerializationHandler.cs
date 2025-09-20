@@ -29,6 +29,13 @@ namespace BloonFactory
             if (!Directory.Exists(FolderDirectory))
                 Directory.CreateDirectory(FolderDirectory);
         }
+        internal static void SaveTemplate(BloonTemplate template, string path)
+        {
+            EnsureFolderExists();
+
+            var content = JsonConvert.SerializeObject(template, Settings);
+            File.WriteAllText(path + FileExtention, content);
+        }
         internal static void SaveTemplate(BloonTemplate template)
         {
             EnsureFolderExists();
