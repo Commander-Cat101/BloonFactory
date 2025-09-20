@@ -37,7 +37,6 @@ namespace BloonFactory.UI
         }
         private static async void Download(Guid guid)
         {
-            if ()
             BloonTemplate template = await ServerHandler.DownloadTemplate(guid);
             SerializationHandler.TryLoadTemplate(template);
         }

@@ -41,6 +41,21 @@ namespace BloonFactory
         {
             return Templates.Any(a => a.Guid == guid);
         }
+        internal static bool TryLoadTemplate(BloonTemplate template)
+        {
+            EnsureFolderExists();
+
+            if (ContainGuid(template.Guid))
+            {
+                MelonLogger.Msg("File already exists");
+                return false;
+            }
+
+            template.IsLoaded = false;
+            SaveTemplate(template);
+            Templates.Add(template);
+            return true;
+        }
         internal static BloonTemplate GetTemplateFromPath(string path)
         {
             EnsureFolderExists();

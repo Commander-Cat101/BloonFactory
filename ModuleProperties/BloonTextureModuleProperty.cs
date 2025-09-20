@@ -36,7 +36,7 @@ namespace BloonFactory.ModuleProperties
             TaskScheduler.ScheduleTask(() =>
             {
                 UpdateImage(image);
-            }, ScheduleType.WaitForFrames, 5);
+            });
 
             return panel;
         }
