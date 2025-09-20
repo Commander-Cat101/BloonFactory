@@ -19,7 +19,7 @@ namespace BloonFactory.Patches
         {
             foreach (var bloon in CustomBloon.Bloons)
             {
-                if (!sortedBloons.Any(a => a.id == bloon.BloonTemplate.TemplateId))
+                if (!sortedBloons.Any(a => a.id == bloon.BloonTemplate.TemplateId) && !bloon.BloonTemplate.IsQueueForDeletion)
                 {
                     sortedBloons.Add(Game.instance.model.GetBloon(bloon.BloonTemplate.TemplateId));
                 }

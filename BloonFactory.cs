@@ -26,13 +26,6 @@ public class BloonFactory : BloonsTD6Mod
         ValueColors.ColorByLinkType[typeof(Trigger)] = Color.magenta;
         ValueColors.ColorByLinkType[typeof(Visuals)] = Color.cyan;
     }
-    public override void OnUpdate()
-    {
-        if (Input.GetKeyDown(KeyCode.K))
-        {
-            ModGameMenu.Open<EditSelectorUI>();
-        }
-    }
     public override void OnNewGameModel(GameModel result)
     {
         foreach (var bloon in CustomBloon.Bloons)

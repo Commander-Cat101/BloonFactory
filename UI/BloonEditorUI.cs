@@ -12,9 +12,8 @@ namespace BloonFactory.UI
 {
     internal class BloonEditorUI : EditorUI
     {
-        public override List<Category> Categories => [new TagsCategory(), new BehaviorsCategory(), new TriggerCategory(), new ActionCategory(), new DisplayCategory(), new SpawningCategory() ];
-
         public override Type CenteredModule => typeof(BloonModule);
+        public override List<Category> Categories => [new TagsCategory(), new BehaviorsCategory(), new TriggerCategory(), new ActionCategory(), new DisplayCategory(), new SpawningCategory() ];
 
         public override void SaveTemplate()
         {

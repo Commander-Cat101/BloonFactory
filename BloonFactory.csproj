@@ -22,6 +22,9 @@
       <Reference Include="FactoryCore">
         <HintPath>..\..\SteamLibrary\steamapps\common\BloonsTD6\Mods\FactoryCore.dll</HintPath>
       </Reference>
+      <Reference Include="Il2CppNinjaKiwi.LiNK">
+        <HintPath>..\..\SteamLibrary\steamapps\common\BloonsTD6\MelonLoader\Il2CppAssemblies\Il2CppNinjaKiwi.LiNK.dll</HintPath>
+      </Reference>
     </ItemGroup>
 
     <Import Project="..\btd6.targets" />

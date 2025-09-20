@@ -29,6 +29,13 @@ namespace BloonFactory
             if (!Directory.Exists(FolderDirectory))
                 Directory.CreateDirectory(FolderDirectory);
         }
+        internal static void SaveTemplate(BloonTemplate template, string path)
+        {
+            EnsureFolderExists();
+
+            var content = JsonConvert.SerializeObject(template, Settings);
+            File.WriteAllText(path + FileExtention, content);
+        }
         internal static void SaveTemplate(BloonTemplate template)
         {
             EnsureFolderExists();
@@ -40,6 +47,21 @@ namespace BloonFactory
         internal static bool ContainGuid(Guid guid)
         {
             return Templates.Any(a => a.Guid == guid);
+        }
+        internal static bool TryLoadTemplate(BloonTemplate template)
+        {
+            EnsureFolderExists();
+
+            if (ContainGuid(template.Guid))
+            {
+                MelonLogger.Msg("File already exists");
+                return false;
+            }
+
+            template.IsLoaded = false;
+            SaveTemplate(template);
+            Templates.Add(template);
+            return true;
         }
         internal static BloonTemplate GetTemplateFromPath(string path)
         {
