@@ -3,6 +3,7 @@ using BloonFactory.LinkTypes;
 using BloonFactory.UI;
 using BTD_Mod_Helper;
 using BTD_Mod_Helper.Api;
+using BTD_Mod_Helper.Api.ModOptions;
 using FactoryCore.UI;
 using Il2CppAssets.Scripts.Data;
 using Il2CppAssets.Scripts.Models;
@@ -21,6 +22,18 @@ namespace BloonFactory;
 
 public class BloonFactory : BloonsTD6Mod
 {
+    public static readonly ModSettingCategory BloonBrowser = new ModSettingCategory("Bloon Browser");
+    public static readonly ModSettingBool HideIncompatibleBloons = new(true)
+    {
+        category = BloonBrowser,
+        displayName = "Hide Incompatible Bloons",
+        description = "Hides bloons that have a version higher than the client in the bloon browser. These bloons are likely not to work on this version."
+    };
+    public static readonly ModSettingInt BloonsPerPage = new(20)
+    {
+        category = BloonBrowser,
+        displayName = "Bloons Per Page"
+    };
     public override void OnApplicationStart()
     {
         ModHelper.Msg<BloonFactory>("BloonFactory loaded!");

@@ -60,6 +60,7 @@ namespace BloonFactory
                 Creator = creator,
                 Category = (byte)category,
                 Description = description,
+                Version = ModHelperData.Version,
                 TemplateJson = JsonConvert.SerializeObject(template, SerializationHandler.Settings)
             };
 
@@ -84,6 +85,7 @@ namespace BloonFactory
         public string Creator;
         public byte Category;
         public string Description;
+        public string Version = "1.0.0";
 
         public string TemplateJson;
     }
@@ -94,6 +96,7 @@ namespace BloonFactory
         public string Creator;
         public byte Category;
         public string Description;
+        public string Version = "1.0.0";
 
         public DateTime UploadTime = DateTime.Now;
         public int Downloads = 0;

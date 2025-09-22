@@ -10,6 +10,7 @@ using Il2CppNinjaKiwi.Common;
 using MelonLoader;
 using Newtonsoft.Json;
 using Octokit.Internal;
+using Semver;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,7 +38,7 @@ namespace BloonFactory.UI
 
         public List<BloonBrowserEntry> filteredEntries = new List<BloonBrowserEntry>();
 
-        public const int bloonsPerPage = 20;
+        public static int bloonsPerPage = 20;
         public int TotalPages => 1 + ((filteredEntries?.Count ?? 1) - 1) / bloonsPerPage;
         public int currentPage = 0;
 
@@ -48,6 +49,8 @@ namespace BloonFactory.UI
         SortingMethod SortingMethod = SortingMethod.Popular;
         public override bool OnMenuOpened(Il2CppSystem.Object data)
         {
+            bloonsPerPage = BloonFactory.BloonsPerPage;
+
             bloonPanels = new BloonBrowserMenuPanel[bloonsPerPage];
 
             BloonBrowserMenuPanel template = null;
@@ -192,6 +195,19 @@ namespace BloonFactory.UI
                 ).ToList();
             }
 
+            if (BloonFactory.HideIncompatibleBloons)
+            {
+                var clientVersion = SemVersion.Parse(ModHelperData.Version);
+                filteredEntries = filteredEntries.Where(entry =>
+                {
+                    if (SemVersion.TryParse(entry.Version, out var version))
+                    {
+                        return clientVersion >= version;
+                    }
+                    return false;
+                }).ToList();
+            }
+
             filteredEntries = (filterDropdown.Dropdown.value switch
             {
                 0 => filteredEntries,
@@ -204,6 +220,8 @@ namespace BloonFactory.UI
                 SortingMethod.New => filteredEntries = filteredEntries.OrderByDescending(entry => entry.UploadTime).ToList(),
                 SortingMethod.Old => filteredEntries = filteredEntries.OrderBy(entry => entry.UploadTime).ToList(),
             });
+
+            
         }
         public void UpdateBottomBar()
         {

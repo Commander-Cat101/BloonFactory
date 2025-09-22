@@ -128,7 +128,7 @@ namespace BloonFactory.UI
         {
             var panel = ModHelperPanel.Create(new Info("Template", 3300, 300), VanillaSprites.MainBGPanelBlue);
 
-            panel.AddText(new Info("Name", 600, 0, 1000, 150, new Vector2(0, 0.5f)), template.Name, 100, Il2CppTMPro.TextAlignmentOptions.Left).EnableAutoSizing(150, 10);
+            panel.AddText(new Info("Name", 850, 0, 1500, 150, new Vector2(0, 0.5f)), template.Name, 100, Il2CppTMPro.TextAlignmentOptions.Left).EnableAutoSizing(150, 10);
 
             panel.AddButton(new Info("Edit", 1500, 0, 200, 200), VanillaSprites.EditBtn, new Action(() =>
             {
