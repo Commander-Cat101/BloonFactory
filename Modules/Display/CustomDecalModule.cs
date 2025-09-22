@@ -1,4 +1,5 @@
 ﻿using BloonFactory.LinkTypes;
+using BloonFactory.ModuleProperties;
 using BTD_Mod_Helper.Api;
 using FactoryCore.API;
 using FactoryCore.API.ModuleProperties;
@@ -14,10 +15,9 @@ using UnityEngine;
 
 namespace BloonFactory.Modules.Display
 {
-    internal class DecalModule : Module
+    internal class CustomDecalModule : Module
     {
-        public static string[] FileNameFromDecal => ["FortifiedDecal", "CamoDecal", "HorizontalStripesDecal", "VerticalStripesDecal", "HorizontalSplitDecal", "VerticalSplitDecal", "BucketHatDecal", "CapDecal", "ClownHairDecal", "CowboyHatDecal", "DisguiseDecal", "SunglassesDecal", "CagedDecal", "GlueDecal", "GoldenDecal", "HackedDecal", "IceDecal", "NailsDecal", "ShieldDecal"]; 
-        public override string Name => "Decal";
+        public override string Name => "Custom Decal";
 
         BloonTexture bloonTexture;
         public override void GetLinkNodes()
@@ -27,7 +27,7 @@ namespace BloonFactory.Modules.Display
         }
         public override void GetModuleProperties()
         {
-            AddProperty(new EnumModuleProperty("Decal", ["Fortified", "Camo", "Horizontal Stripes", "Vertical Stripes", "Horizontal Split", "Vertical Split", "Bucket Hat", "Cap", "Clown Hair", "Cowboy Hat", "Disguise", "Sunglasses", "Caged", "Glue", "Golden", "Hacked", "Ice", "Nails", "Shielded"], 0));
+            AddProperty(new FileModuleProperty("Decal Image", "png,jpg"));
             AddProperty(new ColorModuleProperty("Color", Color.white, false));
 
             AddProperty(new IntModuleProperty("X Offset", 0, int.MinValue, int.MaxValue));
@@ -37,17 +37,29 @@ namespace BloonFactory.Modules.Display
         {
             var texture = GetInputValue<BloonTexture>("Texture");
             if (texture.texture == null)
-                return;
+            {
+                bloonTexture = texture;
+                GetOutputsModules("Texture").ProcessAll();
+            }
 
-            int decal = GetValue<int>("Decal");
-            if (decal >= FileNameFromDecal.Length)
+            byte[] bytes = GetValue<byte[]>("Decal Image");
+
+            if (bytes == null || bytes.Length == 0)
+            {
+                bloonTexture = texture;
+                GetOutputsModules("Texture").ProcessAll();
                 return;
+            }
 
             int xOffset = GetValue<int>("X Offset");
             int yOffset = GetValue<int>("Y Offset");
 
             Color color = GetValue<SavedColor>("Color");
-            var decalTexture = ModContent.GetTexture<BloonFactory>(FileNameFromDecal[decal]);
+
+            Texture2D decalTexture = new Texture2D(2, 2) { filterMode = FilterMode.Bilinear, mipMapBias = -0.5f };
+            if (!ImageConversion.LoadImage(decalTexture, bytes))
+                return;
+
             for (int x = 0; x < decalTexture.width; x++)
             {
                 for (int y = 0; y < decalTexture.height; y++)

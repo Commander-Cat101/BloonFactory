@@ -25,7 +25,6 @@ namespace BloonFactory.Modules.Actions
             var trigger = GetInputValue<Trigger>("Trigger");
             trigger.bloonModel.AddBehavior(new SetPositionActionModel("SetPositionModel", Id.ToString(), GetValue<int>("Distance"), GetValue<float>("Speed")));
 
-
         }
     }
 }

@@ -19,6 +19,9 @@
       <EmbeddedResource Include="Assets\DefaultTemplate.cstmbln" />
     </ItemGroup>
     <ItemGroup>
+      <None Include="Modules\Display\CustomDecalModule.cs" />
+    </ItemGroup>
+    <ItemGroup>
       <Reference Include="FactoryCore">
         <HintPath>..\..\SteamLibrary\steamapps\common\BloonsTD6\Mods\FactoryCore.dll</HintPath>
       </Reference>

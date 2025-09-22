@@ -20,19 +20,22 @@ namespace BloonFactory.Modules.Display
         public override string Name => Guid;
 
         public string Guid;
-        public const int Width = 250;
-        public const int Height = 250;
+        public float Scale = 1f;
+
+        public const int Width = 350;
+        public const int Height = 350;
         public const float PixelsPerUnit = 20;
 
         public Func<Texture2D> GenerateTexture;
 
         public BloonTemplate BloonTemplate;
-        public BloonDisplay(Func<Texture2D> getTexture, BloonTemplate template, string id)
+        public BloonDisplay(Func<Texture2D> getTexture, BloonTemplate template, string id, float scale)
         {
             GenerateTexture = getTexture;
             BloonTemplate = template;
             mod = ModHelper.GetMod<BloonFactory>();
             Guid = id;
+            Scale = scale;
 
             Register();
         }
@@ -44,7 +47,7 @@ namespace BloonFactory.Modules.Display
                 Cache.Add(Guid, texture);
                 cachedTexture = texture;
             }
-            var sprite = Sprite.Create(cachedTexture, new Rect(0, 0, Width, Height), new Vector2(0.5f, 0.5f), PixelsPerUnit);
+            var sprite = Sprite.Create(cachedTexture, new Rect(0, 0, cachedTexture.width, cachedTexture.height), new Vector2(0.5f, 0.5f), PixelsPerUnit / Scale);
             node.GetRenderer<SpriteRenderer>().sprite = sprite;
             node.isSprite = true;
         }

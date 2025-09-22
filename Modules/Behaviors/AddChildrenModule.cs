@@ -19,11 +19,11 @@ namespace BloonFactory.Modules.Behaviors
         public override string Name => "Add Children";
         public override void GetModuleProperties()
         {
-            AddProperty(new EnumModuleProperty("Bloon", Game.instance.model.bloons.Select(a => a.name).ToArray(), 0, new Action<int>((value) =>
+            AddProperty(new EnumModuleProperty("Bloon", Game.instance.model.bloons.Where(a => a.id != ((BloonTemplate)Template).Guid.ToString()).Select(a => a.name).ToArray(), 0, new Action<int>((value) =>
             {
                 SetValue(Game.instance.model.bloons[GetValue<int>("Bloon")].id, "BloonId");
             })));
-            AddProperty(new IntModuleProperty("Count", 10, 0, int.MaxValue));
+            AddProperty(new IntModuleProperty("Count", 10, 1, int.MaxValue));
 
             if (!HasValue("BloonId"))
                 SetValue("", "BloonId");

@@ -1,6 +1,6 @@
 {
-  "Guid": "1119f64d-4989-44d4-955d-8f11f37e7c25",
-  "Name": "Bloon",
+  "Guid": "1a95b9d0-3fa8-41e2-b091-4b50407ab415",
+  "Name": "Template",
   "modules": [
     {
       "$type": "BloonFactory.Modules.Core.BloonModule, BloonFactory",
@@ -8,7 +8,7 @@
       "PropertiesData": {
         "Name": "Custom Bloon",
         "Health": 5,
-        "Speed": 18.0,
+        "Speed": 25.0,
         "Damage": 1
       },
       "Outputs": [
@@ -37,11 +37,8 @@
         }
       ],
       "Inputs": [],
-      "XPosition": 0,
-      "YPosition": 0,
-      "Name": "Bloon",
-      "IsRemovable": false,
-      "Description": "Adds the base functionality of your custom bloon."
+      "XPosition": 890.74207,
+      "YPosition": 0.0
     },
     {
       "$type": "BloonFactory.Modules.Behaviors.AddChildrenModule, BloonFactory",
@@ -60,16 +57,15 @@
           "OutputGuid": "4246f3a7-3c85-45f0-8b7a-9858939dc9b9"
         }
       ],
-      "XPosition": 2427.6753,
-      "YPosition": -904.11255,
-      "Name": "Add Children",
-      "IsRemovable": true,
-      "Description": ""
+      "XPosition": 2458.6272,
+      "YPosition": -546.4401
     },
     {
       "$type": "BloonFactory.Modules.Display.SimpleDisplayModule, BloonFactory",
       "Id": "6963cfac-503f-4e23-a3b6-57a4d33d685e",
-      "PropertiesData": {},
+      "PropertiesData": {
+        "Scale": 1.0
+      },
       "Outputs": [
         {
           "Name": "Texture",
@@ -88,11 +84,8 @@
           "OutputGuid": "ee8871a8-9a12-4985-99a2-d7317059e68c"
         }
       ],
-      "XPosition": 2429.0137,
-      "YPosition": -161.29633,
-      "Name": "Simple Display",
-      "IsRemovable": true,
-      "Description": ""
+      "XPosition": 2459.9653,
+      "YPosition": 285.7937
     },
     {
       "$type": "BloonFactory.Modules.Display.BloonTextureModule, BloonFactory",
@@ -101,7 +94,7 @@
         "Color": {
           "$type": "FactoryCore.API.ModuleProperties.SavedColor, FactoryCore",
           "r": 1.0,
-          "g": 1.0,
+          "g": 0.654902,
           "b": 1.0,
           "a": 1.0
         }
@@ -122,11 +115,8 @@
           "OutputGuid": "03fb67ce-aeaa-4a51-970d-3b4190956755"
         }
       ],
-      "XPosition": 3968.8193,
-      "YPosition": -185.531,
-      "Name": "Bloon Texture",
-      "IsRemovable": true,
-      "Description": ""
+      "XPosition": 4013.525,
+      "YPosition": 213.41089
     },
     {
       "$type": "BloonFactory.Modules.Behaviors.CashOnPopModule, BloonFactory",
@@ -143,11 +133,8 @@
           "OutputGuid": "4246f3a7-3c85-45f0-8b7a-9858939dc9b9"
         }
       ],
-      "XPosition": 2431.2456,
-      "YPosition": -1327.9586,
-      "Name": "Cash On Pop",
-      "IsRemovable": true,
-      "Description": ""
+      "XPosition": 2469.0762,
+      "YPosition": -966.84576
     }
   ]
 }

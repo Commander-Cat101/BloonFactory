@@ -18,36 +18,52 @@ namespace BloonFactory.ModuleProperties
 {
     internal class FileModuleProperty : ModuleProperty
     {
-        public byte[] DefaultValue;
         public string Filter;
+        public bool HasValue => Module.GetValue<byte[]>(Name) != null;
 
-        public FileModuleProperty(byte[] defaultValue, string name, string filter)
+        public ModHelperText Text;
+        public FileModuleProperty(string name, string filter)
         {
-            DefaultValue = defaultValue;
             Name = name;
             Filter = filter;
         }
         public override ModHelperPanel GetVisual(ModHelperPanel root)
         {
-            var panel = root.AddPanel(new Info("FloatSliderModuleValue", 0, 0, 1000, 300));
+            var panel = root.AddPanel(new Info("FileModuleProperty", 0, 0, 1000, 300));
             var button = panel.AddButton(new Info("Button", 0, 0, 750, 250, new Vector2(0.5f, 0.5f)), VanillaSprites.GreenBtnLong, new Action(ButtonPressed));
-            button.AddText(new Info("Text", 0, 0, 700, 200, new Vector2(0.5f, 0.5f)), "Select File").EnableAutoSizing(100, 0);
+            Text = button.AddText(new Info("Text", 0, 0, 700, 200, new Vector2(0.5f, 0.5f)), "Select File");
+            Text.EnableAutoSizing(100, 0);
+
+            SetText();
             return panel;
+        }
+        public void SetText()
+        {
+            Text.SetText(HasValue ? "Clear File" : "Select File");
         }
         public void ButtonPressed()
         {
-            FileDialogHelper.PrepareNativeDlls();
-
-            if (Nfd.OpenDialog(Filter, "", out string path) == Nfd.NfdResult.NFD_OKAY)
+            if (!HasValue)
             {
-                byte[] bytes = File.ReadAllBytes(path);
-                Module.SetValue(bytes, Name);
+                FileDialogHelper.PrepareNativeDlls();
+
+                if (Nfd.OpenDialog(Filter, "", out string path) == Nfd.NfdResult.NFD_OKAY)
+                {
+                    byte[] bytes = File.ReadAllBytes(path);
+                    Module.SetValue(bytes, Name);
+                    SetText();
+                }
+            }
+            else
+            {
+                Module.SetValue(null, Name);
+                SetText();
             }
         }
         public override void LoadData()
         {
             if (!Module.HasValue(Name))
-                Module.SetValue(DefaultValue, Name);
+                Module.SetValue(null, Name);
         }
     }
 }

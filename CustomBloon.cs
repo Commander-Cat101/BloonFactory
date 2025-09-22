@@ -26,8 +26,6 @@ namespace BloonFactory
         public override string BaseBloon => "Red";
 
         public BloonTemplate BloonTemplate;
-
-        public override SpriteReference IconReference => GetSpriteReference("BaseBloon");
         public CustomBloon()
         {
 
@@ -44,11 +42,11 @@ namespace BloonFactory
         public void ModifyExistingBloonModel(BloonModel model, RoundSetModel roundset)
         {
             BloonTemplate.LoadModules();
+            model.icon = new SpriteReference() { guidRef = "" };
             foreach (var module in BloonTemplate.GetModulesOfType<BloonModule>())
             {
                 try
                 {
-                    MelonLogger.Msg("Processing module");
                     module.currentModel = model;
                     module.currentRoundSet = roundset;
                     module.ProcessModule();
@@ -72,8 +70,13 @@ namespace BloonFactory
                 }
             }
 
-            DamageStateDisplayModule.DamageStateFix(model);
+            DamageStateDisplayModule.DamageStateFix(model, BloonTemplate);
             
+            if (model.icon.guidRef == "")
+            {
+                MelonLogger.Msg("No icon setting to default");
+                model.icon = GetSpriteReference("BaseBloon");
+            }
         }
         public override IEnumerable<ModContent> Load()
         {

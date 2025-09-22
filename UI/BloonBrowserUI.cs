@@ -43,6 +43,8 @@ namespace BloonFactory.UI
 
         ModHelperInputField searchField;
 
+        ModHelperDropdown filterDropdown;
+
         SortingMethod SortingMethod = SortingMethod.Popular;
         public override bool OnMenuOpened(Il2CppSystem.Object data)
         {
@@ -129,7 +131,12 @@ namespace BloonFactory.UI
                 GenerateContentForPage();
             }), VanillaSprites.BlueInsertPanelRound, 70);
 
-            searchField = container.AddInputField(new Info("Search", 0, -425, 1500, 150), "", VanillaSprites.BlueInsertPanelRound, new Action<string>((string val) =>
+            filterDropdown = container.AddDropdown(new Info("Filter", -1400, -425, 900, 150), CategoryExtensions.BloonCategoryNames.Prepend("All").ToIl2CppList(), 450, new Action<int>((val) =>
+            {
+                GenerateContentForPage();
+            }), VanillaSprites.BlueInsertPanelRound, 70);
+
+            searchField = container.AddInputField(new Info("Search", 0, -425, 1700, 150), "", VanillaSprites.BlueInsertPanelRound, new Action<string>((string val) =>
             {
                 GenerateContentForPage();
             }), 60, CharacterValidation.None, Il2CppTMPro.TextAlignmentOptions.Left, "Search...", 50);
@@ -137,6 +144,10 @@ namespace BloonFactory.UI
         }
         public void RefreshPage()
         {
+            foreach (var panel in bloonPanels)
+            {
+                panel.SetEntry(null);
+            }
             GameMenu.searchingImg.gameObject.SetActive(true);
             GameMenu.refreshBtn.interactable = false;
             Task.Run(async () =>
@@ -180,6 +191,12 @@ namespace BloonFactory.UI
                     entry.Creator.ToLower().Contains(search)
                 ).ToList();
             }
+
+            filteredEntries = (filterDropdown.Dropdown.value switch
+            {
+                0 => filteredEntries,
+                int val => filteredEntries.Where(entry => (int)entry.CategoryEnum == val - 1).ToList(),
+            });
 
             filteredEntries = (SortingMethod switch
             {

@@ -96,10 +96,6 @@ namespace BloonFactory
         internal static BloonTemplate CreateTemplate(string name)
         {
             EnsureFolderExists();
-            foreach (string thing in Assembly.GetCallingAssembly().GetManifestResourceNames())
-            {
-                MelonLogger.Msg(thing);
-            }
             var template = JsonConvert.DeserializeObject<BloonTemplate>(Assembly.GetCallingAssembly().GetEmbeddedText("DefaultTemplate" + FileExtention), Settings);
 
             template.IsLoaded = false;

@@ -4,12 +4,15 @@ using BloonFactory.UI;
 using BTD_Mod_Helper;
 using BTD_Mod_Helper.Api;
 using FactoryCore.UI;
+using Il2CppAssets.Scripts.Data;
 using Il2CppAssets.Scripts.Models;
 using Il2CppAssets.Scripts.Models.Bloons;
+using Il2CppAssets.Scripts.Unity;
 using MelonLoader;
 using System;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.U2D;
 
 [assembly: MelonInfo(typeof(BloonFactory.BloonFactory), ModHelperData.Name, ModHelperData.Version, ModHelperData.RepoOwner)]
 [assembly: MelonGame("Ninja Kiwi", "BloonsTD6")]
@@ -25,6 +28,17 @@ public class BloonFactory : BloonsTD6Mod
         ValueColors.ColorByLinkType[typeof(BloonModel)] = Color.green;
         ValueColors.ColorByLinkType[typeof(Trigger)] = Color.magenta;
         ValueColors.ColorByLinkType[typeof(Visuals)] = Color.cyan;
+    }
+    public override void OnMainMenu()
+    {
+        /*foreach (var prop in GameData.Instance.mapEditorData.mapEditorProps)
+        {
+            MelonLogger.Msg($"Prop: {prop.name}");
+            if (GameData.Instance.mapEditorData.TryGetMapEditorProp(prop.id, out var data))
+            {
+                MelonLogger.Msg("Found it");
+            }
+        }*/
     }
     public override void OnNewGameModel(GameModel result)
     {

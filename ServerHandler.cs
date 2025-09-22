@@ -109,7 +109,7 @@ namespace BloonFactory
     }
     public static class CategoryExtensions
     {
-        public static string[] BloonCategoryNames =
+        public static string[] BloonCategoryNames =>
         [
             "Boss",
             "Vanilla+",

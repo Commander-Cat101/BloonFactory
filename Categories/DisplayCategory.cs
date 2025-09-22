@@ -12,6 +12,6 @@ namespace BloonFactory.Categories
     {
         public override string Name => "Display";
 
-        public override Type[] Modules => [ typeof(SimpleDisplayModule), typeof(DamageStateDisplayModule), typeof(BloonTextureModule), typeof(CustomTextureModule), typeof(DecalModule) ];
+        public override Type[] Modules => [ typeof(SimpleDisplayModule), typeof(DamageStateDisplayModule), typeof(BloonTextureModule), typeof(CustomTextureModule), typeof(DecalModule), typeof(CustomDecalModule), typeof(TintModule) ];
     }
 }

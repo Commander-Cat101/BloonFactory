@@ -39,6 +39,20 @@ namespace BloonFactory.UI
         ModHelperText descriptionText => GetDescendent<ModHelperText>("Description");
         ModHelperText downloadCountText => GetDescendent<ModHelperText>("DownloadLabel");
 
+        public static VertexGradient regularGradient => new VertexGradient(new Color32(255, 255, 255, 255), new Color32(255, 255, 255, 255), new Color32(255, 255, 255, 255), new Color32(255, 255, 255, 255));
+        public static TMP_ColorGradient goldenGradient
+        {
+            get
+            {
+                var gradient = ScriptableObject.CreateInstance<TMP_ColorGradient>();
+                gradient.topLeft = new Color32(255, 253, 184, 255);
+                gradient.topRight = new Color32(255, 253, 184, 255);
+                gradient.bottomLeft = new Color32(210, 141, 13, 255);
+                gradient.bottomRight = new Color32(210, 141, 13, 255);
+                return gradient;
+            }
+        }
+
         bool downloading = false;
         public void SetEntry(BloonBrowserEntry entry)
         {
@@ -49,6 +63,12 @@ namespace BloonFactory.UI
             }
 
             nameText.SetText($"{entry.Name}  by  {entry.Creator}");
+
+            if (entry.Creator.ToLower() == "commandercat")
+                nameText.Text.SetVertexColorGradient(goldenGradient);
+            else
+                nameText.Text.colorGradient = regularGradient;
+
             descriptionText.SetText(entry.Description ?? "");
             categoryText.SetText(entry.CategoryEnum.ToFriendlyString());
 
@@ -88,8 +108,9 @@ namespace BloonFactory.UI
 
             var mainPanel = panel.AddPanel(new Info("SubPanel", 3350 / 2, -125, 3350, 200, new Vector2(0f, 1f)), VanillaSprites.MainBGPanelBlue);
 
-            mainPanel.AddText(new Info("Name", 850, 0, 1500, 200, new Vector2(0, 0.5f)), $"Test Bloon  by  JohnDoe123", 80, TextAlignmentOptions.Left).EnableAutoSizing(80, 20);
-
+            var text = mainPanel.AddText(new Info("Name", 850, 0, 1500, 200, new Vector2(0, 0.5f)), $"Test Bloon  by  JohnDoe123", 80, TextAlignmentOptions.Left);
+            text.EnableAutoSizing(80, 20);
+            text.Text.enableVertexGradient = true;
 
             mainPanel.AddButton(new Info("DownloadButton", 175, 100, 200, 200, new Vector2(1, 0f)), ModHelperSprites.DownloadBtn, new Action(() =>
             {
@@ -104,16 +125,16 @@ namespace BloonFactory.UI
             description.EnableAutoSizing(70, 20);
             description.Text.overflowMode = TextOverflowModes.Overflow;
 
-            mainPanel.AddButton(new Info("InfoButton", -150, 0, 150, 150, new Vector2(1, 0.5f)), VanillaSprites.InfoBtn2, new Action(() =>
+            mainPanel.AddButton(new Info("InfoButton", -115, 0, 150, 150, new Vector2(1, 0.5f)), VanillaSprites.InfoBtn2, new Action(() =>
             {
                 panel.SetDescriptionOpen(!panel.infoPanel.isActiveAndEnabled);
                 MenuManager.instance.buttonClick2Sound.Play("ClickSounds");
             }));
 
-            mainPanel.AddText(new Info("Category", -1000, 0, 500, 200, new Vector2(1, 0.5f)), "Boss", 100, TextAlignmentOptions.Right).EnableAutoSizing(80, 20);
+            mainPanel.AddText(new Info("Category", -1050, 0, 500, 200, new Vector2(1, 0.5f)), "Boss", 100, TextAlignmentOptions.Right).EnableAutoSizing(80, 20);
 
-            mainPanel.AddImage(new Info("DownloadIcon", -600, 0, 150, 150, new Vector2(1, 0.5f)), DownloadsIcon.guidRef);
-            mainPanel.AddText(new Info("DownloadLabel", -400, 0, 200, 150, new Vector2(1, 0.5f)), GetDownloadString(10199), 80, TextAlignmentOptions.Left).EnableAutoSizing(80);
+            mainPanel.AddImage(new Info("DownloadIcon", -550, 0, 150, 150, new Vector2(1, 0.5f)), DownloadsIcon.guidRef);
+            mainPanel.AddText(new Info("DownloadLabel", -350, 0, 200, 150, new Vector2(1, 0.5f)), GetDownloadString(0), 80, TextAlignmentOptions.Left).EnableAutoSizing(80);
 
             panel.SetDescriptionOpen(false);
 
