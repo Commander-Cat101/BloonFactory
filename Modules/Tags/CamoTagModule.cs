@@ -1,4 +1,5 @@
-﻿using BTD_Mod_Helper.Extensions;
+﻿using BTD_Mod_Helper.Api.Enums;
+using BTD_Mod_Helper.Extensions;
 using FactoryCore.API;
 using FactoryCore.API.ModuleValues;
 using Il2CppAssets.Scripts.Models.Bloons;
@@ -24,7 +25,11 @@ namespace BloonFactory.Modules.Tags
         }
         public override void ProcessModule()
         {
-            GetInputValue<BloonModel>("Bloon").SetCamo(true);
+            //GetInputValue<BloonModel>("Bloon").SetCamo(true);
+
+            var bloon = GetInputValue<BloonModel>("Bloon");
+            bloon.isCamo = true;
+            bloon.AddTag(BloonTag.Camo);
         }
     }
 }

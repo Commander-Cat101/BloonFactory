@@ -41,8 +41,16 @@ namespace BloonFactory
             response.EnsureSuccessStatusCode();
             byte[] bytes = await response.Content.ReadAsByteArrayAsync();
 
-            var obj = JsonConvert.DeserializeObject<BloonTemplate>(Encoding.UTF8.GetString(bytes), SerializationHandler.Settings);
-            return obj;
+            try
+            {
+                var obj = JsonConvert.DeserializeObject<BloonTemplate>(Encoding.UTF8.GetString(bytes), SerializationHandler.Settings);
+                return obj;
+            }
+            catch (Exception ex)
+            {
+                MelonLogger.Msg(ex);
+                return null;
+            }
         }
         internal static async Task<(bool success, string errorCode)> UploadTemplate(BloonTemplate template, BloonCategory category, string description)
         {

@@ -23,6 +23,7 @@ namespace BloonFactory;
 public class BloonFactory : BloonsTD6Mod
 {
     public static readonly ModSettingCategory BloonBrowser = new ModSettingCategory("Bloon Browser");
+
     public static readonly ModSettingBool HideIncompatibleBloons = new(true)
     {
         category = BloonBrowser,
@@ -34,6 +35,7 @@ public class BloonFactory : BloonsTD6Mod
         category = BloonBrowser,
         displayName = "Bloons Per Page"
     };
+
     public override void OnApplicationStart()
     {
         ModHelper.Msg<BloonFactory>("BloonFactory loaded!");
@@ -60,7 +62,6 @@ public class BloonFactory : BloonsTD6Mod
             try
             {
                 var bloonModel = result.bloons.First(bl => bl.id == bloon.BloonTemplate.TemplateId);
-                MelonLogger.Msg($"Updating Existing BloonModel - {bloon.BloonTemplate.Name}");
 
                 bloon.ModifyExistingBloonModel(bloonModel, result.roundSet);
                 result.bloonsByName[bloonModel.name] = bloonModel;

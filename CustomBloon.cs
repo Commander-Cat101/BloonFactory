@@ -37,7 +37,7 @@ namespace BloonFactory
         public override void ModifyBaseBloonModel(BloonModel bloonModel)
         {
             bloonModel.name = BloonTemplate.Name;
-            bloonModel.id = BloonTemplate.Guid.ToString();
+            bloonModel.id = BloonTemplate.TemplateId;
         }
         public void ModifyExistingBloonModel(BloonModel model, RoundSetModel roundset)
         {
@@ -71,12 +71,12 @@ namespace BloonFactory
             }
 
             DamageStateDisplayModule.DamageStateFix(model, BloonTemplate);
-            
+            MelonLogger.Msg(model.name);
             if (model.icon.guidRef == "")
             {
-                MelonLogger.Msg("No icon setting to default");
                 model.icon = GetSpriteReference("BaseBloon");
             }
+            model.dontShowInSandbox = true;
         }
         public override IEnumerable<ModContent> Load()
         {

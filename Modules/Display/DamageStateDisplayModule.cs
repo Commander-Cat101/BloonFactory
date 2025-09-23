@@ -40,7 +40,6 @@ namespace BloonFactory.Modules.Display
             Visuals visuals = GetInputValue<Visuals>("Visuals");
             visuals.bloonModel.disallowCosmetics = true;
             var display = new BloonDisplay(GenerateTexture, (BloonTemplate)Template, Id.ToString(), GetValue<float>("Scale"));
-            MelonLogger.Msg(display.Id);
 
             if (visuals.bloonModel.damageDisplayStates == null)
             {
