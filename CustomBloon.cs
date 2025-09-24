@@ -71,7 +71,6 @@ namespace BloonFactory
             }
 
             DamageStateDisplayModule.DamageStateFix(model, BloonTemplate);
-            MelonLogger.Msg(model.name);
             if (model.icon.guidRef == "")
             {
                 model.icon = GetSpriteReference("BaseBloon");

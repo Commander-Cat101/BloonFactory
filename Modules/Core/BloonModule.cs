@@ -23,7 +23,7 @@ namespace BloonFactory.Modules.Core
         {
             AddProperty(new IntModuleProperty("Health", 1, 1, int.MaxValue));
             AddProperty(new FloatModuleProperty("Speed", 25, 1, float.MaxValue));
-            AddProperty(new IntModuleProperty("Damage", 1, 1, int.MaxValue));
+            AddProperty(new IntModuleProperty("Damage", 1, 0, int.MaxValue));
         }
         public override void GetLinkNodes()
         {

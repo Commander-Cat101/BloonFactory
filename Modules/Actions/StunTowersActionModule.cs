@@ -13,8 +13,8 @@ namespace BloonFactory.Modules.Actions
 
         public override void GetModuleProperties()
         {
-            AddProperty(new FloatModuleProperty("Distance", 25, float.MinValue, float.MinValue));
-            AddProperty(new FloatModuleProperty("Duration", 3, float.MinValue, float.MinValue));
+            AddProperty(new FloatModuleProperty("Distance", 25, float.MinValue, float.MaxValue));
+            AddProperty(new FloatModuleProperty("Duration", 3, float.MinValue, float.MaxValue));
         }
         public override void GetLinkNodes()
         {
@@ -24,7 +24,7 @@ namespace BloonFactory.Modules.Actions
         public override void ProcessModule()
         {
             var trigger = GetInputValue<Trigger>("Trigger");
-            trigger.bloonModel.AddBehavior(new StunTowersInRadiusActionModel("StunTowers", Id.ToString(), GetValue<float>("Distance"), GetValue<float>("Duration"), 0.3f, new PrefabReference(""), false));
+            trigger.bloonModel.AddBehavior(new StunTowersInRadiusActionModel("StunTowers", Id.ToString(), GetValue<float>("Distance"), GetValue<float>("Duration"), 0.3f, new PrefabReference("289f511b736a06a4c993b9e0e73d2b8a"), false));
         }
     }
 }

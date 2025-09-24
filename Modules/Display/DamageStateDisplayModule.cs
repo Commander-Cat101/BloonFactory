@@ -12,6 +12,7 @@ using Il2CppNinjaKiwi.Common.ResourceUtils;
 using MelonLoader;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -39,7 +40,7 @@ namespace BloonFactory.Modules.Display
         {
             Visuals visuals = GetInputValue<Visuals>("Visuals");
             visuals.bloonModel.disallowCosmetics = true;
-            var display = new BloonDisplay(GenerateTexture, (BloonTemplate)Template, Id.ToString(), GetValue<float>("Scale"));
+            var display = new BloonDisplay(GenerateTexture, (BloonTemplate)Template, Guid.NewGuid().ToString(), GetValue<float>("Scale"));
 
             if (visuals.bloonModel.damageDisplayStates == null)
             {
@@ -48,6 +49,9 @@ namespace BloonFactory.Modules.Display
             var list = visuals.bloonModel.damageDisplayStates.ToList();
             list.Add(new DamageStateModel("DamageState", ModContent.CreatePrefabReference(display.Id), GetValue<float>("Percent") / 100));
             visuals.bloonModel.damageDisplayStates = list.ToIl2CppReferenceArray();
+
+            File.WriteAllBytes(Path.Combine(SerializationHandler.FolderDirectory, Id.ToString()), GenerateTexture().EncodeToPNG().ToArray());
+
         }
         public Texture2D GenerateTexture()
         {

@@ -24,7 +24,7 @@ namespace BloonFactory.Modules.Actions
         public override void GetModuleProperties()
         {
             AddProperty(new IntSliderModuleProperty("Heal Percent", 25, 0, 100));
-            AddProperty(new IntModuleProperty("Heal Additive", 0, int.MinValue, int.MinValue));
+            AddProperty(new IntModuleProperty("Heal Additive", 0, int.MinValue, int.MaxValue));
         }
         public override void GetLinkNodes()
         {

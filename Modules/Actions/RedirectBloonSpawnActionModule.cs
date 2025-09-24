@@ -15,7 +15,7 @@ namespace BloonFactory.Modules.Actions
         public override string Description => "Sets the bloon spawn point to the position of this bloon for a set duration";
         public override void GetModuleProperties()
         {
-            AddProperty(new FloatModuleProperty("Duration", 5, 0, float.PositiveInfinity));
+            AddProperty(new FloatModuleProperty("Duration", 5, 0, float.MaxValue));
         }
         public override void GetLinkNodes()
         {

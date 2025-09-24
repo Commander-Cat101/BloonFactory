@@ -17,7 +17,7 @@ namespace BloonFactory.Modules.Actions
 
         public override void GetModuleProperties()
         {
-            AddProperty(new FloatModuleProperty("Distance", 25, 0, float.PositiveInfinity));
+            AddProperty(new FloatModuleProperty("Distance", 25, 0, float.MaxValue));
             AddProperty(new FloatModuleProperty("Speed Buff", 2f, 0.1f, 99));
         }
         public override void GetLinkNodes()

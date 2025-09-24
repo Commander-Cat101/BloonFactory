@@ -55,7 +55,6 @@ namespace BloonFactory.Modules.Triggers
 
                 if (percThroughMap >= requiredPercThroughMap)
                 {
-                    MelonLogger.Msg("Triggering.");
                     trigger.Trigger();
                     break;
                 }
@@ -80,10 +79,8 @@ namespace BloonFactory.Modules.Triggers
     {
         public static void Postfix(HealthPercentTrigger __instance)
         {
-            MelonLogger.Msg("Got spawned");
             if (__instance.modl.name.EndsWith(TrackPercentTriggerModule.BehaviorName))
             {
-                MelonLogger.Msg("Started coroutine");
                 MelonCoroutines.Start(TrackPercentTriggerModule.UpdateLogic(__instance));
             }
         }

@@ -5,6 +5,7 @@ using FactoryCore.API.ModuleProperties;
 using FactoryCore.API.ModuleValues;
 using Il2CppAssets.Scripts.Models.Store.Loot;
 using JetBrains.Annotations;
+using MelonLoader;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,6 +41,7 @@ namespace BloonFactory.Modules.Display
                 return;
 
             int decal = GetValue<int>("Decal");
+
             if (decal >= FileNameFromDecal.Length)
                 return;
 

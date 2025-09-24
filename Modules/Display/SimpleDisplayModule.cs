@@ -33,7 +33,7 @@ namespace BloonFactory.Modules.Display
         {
             Visuals visuals = GetInputValue<Visuals>("Visuals");
             visuals.bloonModel.disallowCosmetics = true;
-            var display = new BloonDisplay(GenerateTexture, (BloonTemplate)Template, Id.ToString(), GetValue<float>("Scale"));
+            var display = new BloonDisplay(GenerateTexture, (BloonTemplate)Template, Guid.NewGuid().ToString(), GetValue<float>("Scale"));
             display.Apply(visuals.bloonModel);
 
             if (visuals.bloonModel.icon.guidRef == "")

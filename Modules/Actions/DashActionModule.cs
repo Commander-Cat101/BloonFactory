@@ -13,7 +13,7 @@ namespace BloonFactory.Modules.Actions
         public override void GetModuleProperties()
         {
             AddProperty(new FloatModuleProperty("Speed", 2.5f, 0, float.MaxValue));
-            AddProperty(new IntModuleProperty("Distance", 25, int.MinValue, int.MinValue));
+            AddProperty(new IntModuleProperty("Distance", 25, int.MinValue, int.MaxValue));
         }
         public override void GetLinkNodes()
         {
