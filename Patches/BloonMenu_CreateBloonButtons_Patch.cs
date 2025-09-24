@@ -30,8 +30,6 @@ namespace BloonFactory.Patches
             if (bloon != null)
             {
                 __result = bloon;
-                if (__result == null)
-                    MelonLogger.Msg("its null tho");
                 return false;
             }
 
@@ -68,6 +66,9 @@ namespace BloonFactory.Patches
 
             foreach (var bloon in CustomBloon.Bloons)
             {
+                if (bloon.BloonTemplate.IsQueueForDeletion)
+                    continue;
+
                 var obj = GameObject.Instantiate(__instance.spawnBloonButtonPrefab, __instance.bloonButtonContainer.transform);
                 obj.name = name;
                 obj.RemoveComponent<SpawnBloonButton>();

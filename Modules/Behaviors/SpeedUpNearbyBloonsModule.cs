@@ -13,11 +13,11 @@ namespace BloonFactory.Modules.Behaviors
 {
     internal class SpeedUpNearbyBloonsModule : Module
     {
-        public override string Name => "Speedup Nearby Bloons";
+        public override string Name => "Speedup Behind Bloons";
         public override void GetModuleProperties()
         {
             AddProperty(new FloatModuleProperty("Speed Multiplier", 2f, 0.1f, 99));
-            AddProperty(new IntModuleProperty("Radius", 50, 0, int.MaxValue));
+            AddProperty(new IntModuleProperty("Distance", 50, 0, int.MaxValue));
         }
 
         public override void GetLinkNodes()

@@ -112,12 +112,12 @@ namespace BloonFactory.UI
             text.EnableAutoSizing(80, 20);
             text.Text.enableVertexGradient = true;
 
-            mainPanel.AddButton(new Info("DownloadButton", 175, 100, 200, 200, new Vector2(1, 0f)), ModHelperSprites.DownloadBtn, new Action(() =>
+            mainPanel.AddButton(new Info("DownloadButton", 150, 100, 200, 200, new Vector2(1, 0f)), ModHelperSprites.DownloadBtn, new Action(() =>
             {
 
             }));
 
-            mainPanel.AddImage(new Info("DownloadedImage", 175, 100, 200, 200, new Vector2(1, 0f)), VanillaSprites.TickGreenIcon);
+            mainPanel.AddImage(new Info("DownloadedImage", 150, 100, 200, 200, new Vector2(1, 0f)), VanillaSprites.TickGreenIcon);
 
             panel.AddPanel(new Info("InfoPanel", 0, 75, 3600, 150, new Vector2(0.5f, 0f)), VanillaSprites.BlueInsertPanel);
 

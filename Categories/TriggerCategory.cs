@@ -12,6 +12,6 @@ namespace BloonFactory.Categories
     {
         public override string Name => "Triggers";
 
-        public override Type[] Modules => [ typeof(DamagedTriggerModule), typeof(HealthPercentTriggerModule), typeof(SellTowerTriggerModule), typeof(TimeTriggerModule)];
+        public override Type[] Modules => [ typeof(DamagedTriggerModule), typeof(HealthPercentTriggerModule), typeof(SellTowerTriggerModule), typeof(TimeTriggerModule), typeof(TrackPercentTriggerModule)];
     }
 }
