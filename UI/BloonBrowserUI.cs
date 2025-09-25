@@ -49,8 +49,6 @@ namespace BloonFactory.UI
         SortingMethod SortingMethod = SortingMethod.Popular;
         public override bool OnMenuOpened(Il2CppSystem.Object data)
         {
-            bloonsPerPage = BloonFactory.BloonsPerPage;
-
             bloonPanels = new BloonBrowserMenuPanel[bloonsPerPage];
 
             BloonBrowserMenuPanel template = null;

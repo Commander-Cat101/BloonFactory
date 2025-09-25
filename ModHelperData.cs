@@ -9,6 +9,6 @@ public static class ModHelperData
     public const string Description = "A mod for creating custom bloons";
 
     public const string Author = "CommanderCat";
-    public const string RepoOwner = "";
-    public const string RepoName = "";
+    public const string RepoOwner = "Commander-Cat101";
+    public const string RepoName = "BloonFactory";
 }

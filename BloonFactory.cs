@@ -8,6 +8,7 @@ using FactoryCore.UI;
 using Il2CppAssets.Scripts.Data;
 using Il2CppAssets.Scripts.Models;
 using Il2CppAssets.Scripts.Models.Bloons;
+using Il2CppAssets.Scripts.Models.Rounds;
 using Il2CppAssets.Scripts.Unity;
 using MelonLoader;
 using System;
@@ -30,11 +31,6 @@ public class BloonFactory : BloonsTD6Mod
         displayName = "Hide Incompatible Bloons",
         description = "Hides bloons that have a version higher than the client in the bloon browser. These bloons are likely not to work on this version."
     };
-    public static readonly ModSettingInt BloonsPerPage = new(20)
-    {
-        category = BloonBrowser,
-        displayName = "Bloons Per Page"
-    };
 
     public override void OnApplicationStart()
     {
@@ -43,17 +39,9 @@ public class BloonFactory : BloonsTD6Mod
         ValueColors.ColorByLinkType[typeof(BloonModel)] = Color.green;
         ValueColors.ColorByLinkType[typeof(Trigger)] = Color.magenta;
         ValueColors.ColorByLinkType[typeof(Visuals)] = Color.cyan;
-    }
-    public override void OnMainMenu()
-    {
-        /*foreach (var prop in GameData.Instance.mapEditorData.mapEditorProps)
-        {
-            MelonLogger.Msg($"Prop: {prop.name}");
-            if (GameData.Instance.mapEditorData.TryGetMapEditorProp(prop.id, out var data))
-            {
-                MelonLogger.Msg("Found it");
-            }
-        }*/
+        ValueColors.ColorByLinkType[typeof(RoundModel)] = Color.yellow;
+        ValueColors.ColorByLinkType[typeof(RoundSetModel)] = Color.blue;
+        ValueColors.ColorByLinkType[typeof(BloonTexture)] = Color.red;
     }
     public override void OnNewGameModel(GameModel result)
     {
