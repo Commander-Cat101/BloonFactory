@@ -11,4 +11,6 @@ public static class ModHelperData
     public const string Author = "CommanderCat";
     public const string RepoOwner = "Commander-Cat101";
     public const string RepoName = "BloonFactory";
+
+    public const string Dependencies = "Commander-Cat101/FactoryCore";
 }
