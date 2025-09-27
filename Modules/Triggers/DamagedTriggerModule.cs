@@ -16,6 +16,8 @@ namespace BloonFactory.Modules.Triggers
     {
         public override string Name => "Damaged Trigger";
 
+        public override string Description => "Triggers when the bloon is damaged. Won't trigger if the damage pops the bloon.";
+
         public override void GetModuleProperties()
         {
             AddProperty(new FloatModuleProperty("Cooldown", 5, 0, float.MaxValue));

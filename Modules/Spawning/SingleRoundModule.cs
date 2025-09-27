@@ -13,6 +13,7 @@ namespace BloonFactory.Modules.Spawning
     {
         public override string Name => "Single Round";
 
+        public override string Description => "Requires a connected bloon group to spawn.Requires a connected bloon group to spawn.";
         public override void GetLinkNodes()
         {
             AddInput<RoundSetModel>("Roundset");

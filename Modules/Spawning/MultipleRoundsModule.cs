@@ -9,6 +9,8 @@ namespace BloonFactory.Modules.Spawning
     {
         public override string Name => "Multiple Rounds";
 
+        public override string Description => "Requires a connected bloon group to spawn."
+
         [JsonIgnore]
         public RoundModel currentRound;
         public override void GetLinkNodes()
