@@ -12,6 +12,6 @@ namespace BloonFactory.Categories
     {
         public override string Name => "Tags";
 
-        public override Type[] Modules => [typeof(BloonPropertyModule), typeof(CamoTagModule), typeof(FortifiedTagModule), typeof(MoabTagModule), typeof(RegrowTagModule)];
+        public override Type[] Modules => [typeof(BloonPropertyModule), typeof(CamoTagModule), typeof(FortifiedTagModule), typeof(MoabTagModule), typeof(RegrowTagModule), typeof(BadTagModule)];
     }
 }

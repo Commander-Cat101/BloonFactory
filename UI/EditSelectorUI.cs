@@ -99,6 +99,7 @@ namespace BloonFactory.UI
                         }
                         SerializationHandler.LoadTemplate(template);
                         SerializationHandler.SaveTemplate(template);
+                        template.IsLoaded = false;
 
                         AddContent();
                     }
