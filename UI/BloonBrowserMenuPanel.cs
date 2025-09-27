@@ -176,6 +176,9 @@ namespace BloonFactory.UI
             }
             if (SerializationHandler.TryLoadTemplate(template))
             {
+                template.SetReferences();
+                template.LoadModules();
+
                 downloading = false;
                 SetDownloaded(true);
                 PopupScreen.instance.SafelyQueue(screen =>

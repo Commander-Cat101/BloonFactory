@@ -200,7 +200,7 @@ namespace BloonFactory.UI
                 {
                     if (SemVersion.TryParse(entry.Version, out var version))
                     {
-                        return clientVersion >= version;
+                        return clientVersion.Major > version.Major || (clientVersion.Major == version.Major && clientVersion.Minor >= version.Minor);
                     }
                     return false;
                 }).ToList();
