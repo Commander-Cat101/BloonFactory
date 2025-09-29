@@ -1,4 +1,5 @@
-﻿using FactoryCore.API;
+﻿using BTD_Mod_Helper.Extensions;
+using FactoryCore.API;
 using FactoryCore.API.ModuleValues;
 using Il2CppAssets.Scripts.Models.Rounds;
 using System;
@@ -13,7 +14,7 @@ namespace BloonFactory.Modules.Spawning
     {
         public override string Name => "Single Round";
 
-        public override string Description => "Requires a connected bloon group to spawn.Requires a connected bloon group to spawn.";
+        public override string Description => "Requires a connected bloon group to spawn.";
         public override void GetLinkNodes()
         {
             AddInput<RoundSetModel>("Roundset");
@@ -25,7 +26,12 @@ namespace BloonFactory.Modules.Spawning
         }
         public override void ProcessModule()
         {
-            GetOutputsModules("Round").ProcessAll();
+            var round = GetOutputsModules("Round");
+
+            if (round.Count == 0)
+                GetInputValue<RoundSetModel>("Roundset").rounds[GetValue<int>("Round") - 1].AddBloonGroup(((BloonTemplate)Template).TemplateId, 1, 0, 1);
+            else
+                round.ProcessAll();
         }
     }
 }

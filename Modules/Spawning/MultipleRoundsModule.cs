@@ -1,4 +1,5 @@
-﻿using FactoryCore.API;
+﻿using BTD_Mod_Helper.Extensions;
+using FactoryCore.API;
 using FactoryCore.API.ModuleValues;
 using Il2CppAssets.Scripts.Models.Rounds;
 using JsonIgnoreAttribute = Newtonsoft.Json.JsonIgnoreAttribute;
@@ -27,10 +28,16 @@ namespace BloonFactory.Modules.Spawning
         {
             int start = GetValue<int>("Start Round");
             int end = GetValue<int>("End Round");
+
+            var modules = GetOutputsModules("Round");
             for (int i = start; i < end; i++)
             {
                 currentRound = GetInputValue<RoundSetModel>("Roundset").rounds[i - 1];
-                GetOutputsModules("Round").ProcessAll();
+
+                if (modules.Count == 0)
+                    GetInputValue<RoundSetModel>("Roundset").rounds[GetValue<int>("Round") - 1].AddBloonGroup(((BloonTemplate)Template).TemplateId, 1, 0, 1);
+                else
+                    modules.ProcessAll();
             }
         }
     }
