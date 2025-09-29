@@ -203,7 +203,7 @@ namespace BloonFactory.UI
                             dropdown = panel.AddDropdown(new Info("Filter", 421.5F * 1.5f, 100F * 1.5f, new Vector2(.7f, 0f)), CategoryExtensions.BloonCategoryNames.ToIl2CppList(), 600, null, VanillaSprites.BlueInsertPanelRound, 70);
                             panel.AddText(new Info("CategoryText", 700, 100, new Vector2(.3f, 0f)), "Category:", 100);
 
-                            description = panel.AddInputField(new Info("Description", 1800, 150, new Vector2(0.5f, 0.5f)), "Enter Description.", VanillaSprites.BlueInsertPanel);
+                            description = panel.AddInputField(new Info("Description", 1800, 150, new Vector2(0.5f, 0.5f)), string.Empty, VanillaSprites.BlueInsertPanel, null, 70, Il2CppTMPro.TMP_InputField.CharacterValidation.None, Il2CppTMPro.TextAlignmentOptions.Center, "Enter Description.");
                             description.InputField.characterLimit = 100;
                             description.InputField.GetComponent<Mask>().enabled = false;
                             description.InputField.GetComponent<Mask>().enabled = true;
@@ -219,6 +219,11 @@ namespace BloonFactory.UI
         }
         public void UploadBloon(BloonTemplate template, BloonCategory category, string description)
         {
+            if (string.IsNullOrEmpty(description))
+            {
+                PopupScreen.instance.SafelyQueue(screen => screen.ShowPopup(PopupScreen.Placement.menuCenter, "Upload Failed", $"Failed to send upload request to server.\nDescription must not be empty.", null, "Ok", null, null, Popup.TransitionAnim.Scale));
+                return;
+            }
             Task.Run(async () =>
             {
                 (bool success, string errorCode) result = await ServerHandler.UploadTemplate(template, category, description);
