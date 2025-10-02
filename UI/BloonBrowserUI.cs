@@ -154,6 +154,7 @@ namespace BloonFactory.UI
             Task.Run(async () =>
             {
                 PageUpdateRequest request = await ServerHandler.RequestPageUpdate();
+                
                 allEntries = request.Data;
                 generatedContentReady = true;
             });

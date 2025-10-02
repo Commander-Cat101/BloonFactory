@@ -27,7 +27,7 @@ namespace BloonFactory.Modules.Behaviors
 
         public override void ProcessModule()
         {
-            GetInputValue<BloonModel>("Bloon").AddBehavior(new BuffBloonSpeedModel("BuffBloonSpeedModel", GetValue<float>("Speed Multiplier"), GetValue<int>("Radius"), "VortexBloonSpeedBuff"));
+            GetInputValue<BloonModel>("Bloon").AddBehavior(new BuffBloonSpeedModel("BuffBloonSpeedModel", GetValue<float>("Speed Multiplier"), GetValue<int>("Distance"), "VortexBloonSpeedBuff"));
         }
     }
 }

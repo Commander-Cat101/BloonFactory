@@ -1,4 +1,5 @@
 ﻿using BloonFactory.LinkTypes;
+using BloonFactory.ModuleProperties;
 using BTD_Mod_Helper.Extensions;
 using FactoryCore.API;
 using FactoryCore.API.ModuleProperties;
@@ -17,15 +18,10 @@ namespace BloonFactory.Modules.Actions
         public override string Name => "Spawn Bloons";
         public override void GetModuleProperties()
         {
-            AddProperty(new EnumModuleProperty("Bloon", Game.instance.model.bloons.Select(a => a.name).ToArray(), 0, new Action<int>((value) =>
-            {
-                SetValue(Game.instance.model.bloons[GetValue<int>("Bloon")].id, "BloonId");
-            })));
+            AddProperty(new BloonEnumModuleProperty("Bloon", "BloonId"));
             AddProperty(new IntModuleProperty("Count", 10, 0, int.MaxValue));
             AddProperty(new FloatModuleProperty("Distance Ahead", 45, float.MinValue, float.MaxValue));
 
-            if (!HasValue("BloonId"))
-                SetValue(Game.instance.model.bloons[0].id, "BloonId");
         }
         public override void GetLinkNodes()
         {

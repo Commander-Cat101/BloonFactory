@@ -1,4 +1,5 @@
 ﻿using BloonFactory.LinkTypes;
+using BloonFactory.ModuleProperties;
 using BTD_Mod_Helper.Extensions;
 using FactoryCore.API;
 using FactoryCore.API.ModuleProperties;
@@ -19,14 +20,9 @@ namespace BloonFactory.Modules.Behaviors
         public override string Name => "Add Children";
         public override void GetModuleProperties()
         {
-            AddProperty(new EnumModuleProperty("Bloon", Game.instance.model.bloons.Where(a => a.id != ((BloonTemplate)Template).Guid.ToString()).Select(a => a.name).ToArray(), 0, new Action<int>((value) =>
-            {
-                SetValue(Game.instance.model.bloons[GetValue<int>("Bloon")].id, "BloonId");
-            })));
+            AddProperty(new BloonEnumModuleProperty("Bloon", "BloonId", ((BloonTemplate)Template).TemplateId));
             AddProperty(new IntModuleProperty("Count", 10, 1, int.MaxValue));
 
-            if (!HasValue("BloonId"))
-                SetValue("", "BloonId");
         }
         public override void GetLinkNodes()
         {
