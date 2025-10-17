@@ -35,7 +35,7 @@ namespace BloonFactory.Modules.Spawning
                 currentRound = GetInputValue<RoundSetModel>("Roundset").rounds[i - 1];
 
                 if (modules.Count == 0)
-                    GetInputValue<RoundSetModel>("Roundset").rounds[GetValue<int>("Round") - 1].AddBloonGroup(((BloonTemplate)Template).TemplateId, 1, 0, 1);
+                    GetInputValue<RoundSetModel>("Roundset").rounds[i - 1].AddBloonGroup(((BloonTemplate)Template).TemplateId, 1, 0, 1);
                 else
                     modules.ProcessAll();
             }
