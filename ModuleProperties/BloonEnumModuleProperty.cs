@@ -83,7 +83,7 @@ namespace BloonFactory.ModuleProperties
 
             string strippedInput = input.ToLowerInvariant().Trim().Replace(" ", "");
 
-            BloonModel[] bloons = Bloons.Where(a => a.name.ToLowerInvariant().Replace(" ", "").Trim().Contains(strippedInput)).ToArray();
+            BloonModel[] bloons = Bloons.Where(a => a.name.ToLowerInvariant().Replace(" ", "").Trim().Contains(strippedInput)).OrderBy(a => a.name.Length).ToArray();
 
             scrollPanel.transform.DestroyAllChildren();
 
