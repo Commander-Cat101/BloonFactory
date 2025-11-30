@@ -16,7 +16,6 @@ namespace BloonFactory.Modules.Tags
 
         public override void GetModuleProperties()
         {
-            AddProperty(new SpaceModuleProperty(100));
             AddProperty(new FloatModuleProperty("Regrow Rate", 3, 0.05f, 10));
         }
         public override void GetLinkNodes()
