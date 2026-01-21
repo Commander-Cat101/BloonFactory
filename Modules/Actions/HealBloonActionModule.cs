@@ -17,9 +17,9 @@ using System.Threading.Tasks;
 
 namespace BloonFactory.Modules.Actions
 {
-    internal class DestroyNearbyProjectilesActionModule : Module
+    internal class HealBloonActionModule : Module
     {
-        public override string Name => "Destroy Nearby Projectiles";
+        public override string Name => "Heal Bloon";
 
         public override void GetModuleProperties()
         {

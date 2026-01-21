@@ -6,7 +6,6 @@ using FactoryCore.API.ModuleValues;
 using HarmonyLib;
 using Il2CppAssets.Scripts.Models.Bloons.Behaviors;
 using Il2CppAssets.Scripts.Simulation.Bloons.Behaviors;
-using Il2CppAssets.Scripts.Unity.Bridge;
 using Il2CppAssets.Scripts.Unity.UI_New.InGame;
 using Il2CppInterop.Runtime.InteropTypes.Arrays;
 using MelonLoader;
@@ -36,7 +35,7 @@ namespace BloonFactory.Modules.Triggers
 
         public override void ProcessModule()
         {
-            var guids = new Il2CppStringArray(GetOutputsModules("Trigger").AsGuids());
+           var guids = new Il2CppStringArray(GetOutputsModules("Trigger").AsGuids());
 
             currentModel.AddBehavior(new HealthPercentTriggerModel(BehaviorName, false, new Il2CppStructArray<float>([GetValue<float>("Cooldown"), Convert.ToSingle(GetValue<bool>("Trigger On Decrease")), Convert.ToSingle(GetValue<bool>("Trigger On Increase"))]), guids, true));
 

@@ -36,12 +36,6 @@ public class BloonFactory : BloonsTD6Mod
     {
         ModHelper.Msg<BloonFactory>("BloonFactory loaded!");
         SerializationHandler.LoadAllTemplates();
-        ValueColors.ColorByLinkType[typeof(BloonModel)] = Color.green;
-        ValueColors.ColorByLinkType[typeof(Trigger)] = Color.magenta;
-        ValueColors.ColorByLinkType[typeof(Visuals)] = Color.cyan;
-        ValueColors.ColorByLinkType[typeof(RoundModel)] = Color.yellow;
-        ValueColors.ColorByLinkType[typeof(RoundSetModel)] = Color.blue;
-        ValueColors.ColorByLinkType[typeof(BloonTexture)] = Color.red;
     }
     public override void OnNewGameModel(GameModel result)
     {

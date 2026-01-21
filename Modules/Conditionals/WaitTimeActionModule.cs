@@ -12,7 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BloonFactory.Modules.Actions
+namespace BloonFactory.Modules.Conditionals
 {
     internal class WaitTimeActionModule : Module
     {

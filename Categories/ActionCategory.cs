@@ -1,4 +1,5 @@
 ﻿using BloonFactory.Modules.Actions;
+using BloonFactory.Modules.Conditionals;
 using FactoryCore.API;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,6 @@ namespace BloonFactory.Categories
     {
         public override string Name => "Actions";
 
-        public override Type[] Modules => [ typeof(SellNearbyTowersActionModule), typeof(BuffNearbyBloonsActionModule), typeof(DestroyNearbyProjectilesActionModule), typeof(DrainLivesActionModule), typeof(DashActionModule), typeof(SetImmuneActionModule), typeof(SpawnBloonsActionModule), typeof(RedirectBloonSpawnActionModule), typeof(StunTowersActionModule), typeof(WaitTimeActionModule), typeof(RemoveAllEffectsActionModule), typeof(SetSpeedActionModule)];
+        public override Type[] Modules => [ typeof(SellNearbyTowersActionModule), typeof(BuffNearbyBloonsActionModule), typeof(HealBloonActionModule), typeof(DrainLivesActionModule), typeof(DashActionModule), typeof(SetImmuneActionModule), typeof(SpawnBloonsActionModule), typeof(RedirectBloonSpawnActionModule), typeof(StunTowersActionModule), typeof(WaitTimeActionModule), typeof(RemoveAllEffectsActionModule), typeof(SetSpeedActionModule)];
     }
 }
