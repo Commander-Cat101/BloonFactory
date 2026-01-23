@@ -29,6 +29,10 @@
         <HintPath>..\..\SteamLibrary\steamapps\common\BloonsTD6\MelonLoader\Il2CppAssemblies\Il2CppNinjaKiwi.LiNK.dll</HintPath>
       </Reference>
     </ItemGroup>
+    <ItemGroup>
+      <Folder Include="Modules\Actions\Game\" />
+      <Folder Include="Modules\Deprecated\" />
+    </ItemGroup>
 
     <Import Project="..\btd6.targets" />
 </Project>

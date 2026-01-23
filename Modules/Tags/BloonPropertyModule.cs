@@ -20,7 +20,7 @@ namespace BloonFactory.Modules.Tags
         }
         public override void GetModuleProperties()
         {
-            AddProperty(new EnumModuleProperty("Bloon Property", ["None", "Lead", "Black", "White", "Purple", "Frozen", "Immune"], 0));
+            AddProperty(new EnumModuleProperty("Bloon Property", ["None", "Lead", "Black", "White", "Purple", "Frozen", "Immune", "Glass"], 0));
         }
         public override void ProcessModule()
         {

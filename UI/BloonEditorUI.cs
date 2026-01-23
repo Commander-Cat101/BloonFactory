@@ -1,6 +1,6 @@
-﻿using BloonFactory.Categories;
-using BloonFactory.LinkTypes;
+﻿using BloonFactory.LinkTypes;
 using BloonFactory.Modules.Actions;
+using BloonFactory.Modules.Actions.Stats;
 using BloonFactory.Modules.Behaviors;
 using BloonFactory.Modules.Conditionals;
 using BloonFactory.Modules.Core;
@@ -69,7 +69,18 @@ namespace BloonFactory.UI
             })
             .WithNested("Actions", 800, menu =>
             {
-                menu.WithButton(typeof(SellNearbyTowersActionModule))
+                menu.WithNested("Stats", 800, subMenu =>
+                {
+                    subMenu.WithButton(typeof(ModifyHealthActionModule))
+                    .WithButton(typeof(ModifySpeedActionModule))
+                    .WithButton(typeof(ModifyDamageActionModule))
+                    .WithButton(typeof(ModifyPropertyActionModule));
+                })
+                .WithNested("Game", 800, subMenu =>
+                {
+
+                })
+                .WithButton(typeof(SellNearbyTowersActionModule))
                 .WithButton(typeof(BuffNearbyBloonsActionModule))
                 .WithButton(typeof(HealBloonActionModule))
                 .WithButton(typeof(DrainLivesActionModule))
@@ -83,7 +94,9 @@ namespace BloonFactory.UI
             })
             .WithNested("Conditionals", 800, menu =>
             {
-                menu.WithButton(typeof(WaitTimeActionModule));
+                menu.WithButton(typeof(WaitTimeActionModule))
+                .WithButton(typeof(CompareActionModule))
+                .WithButton(typeof(RandomActionModule));
             })
             .WithNested("Display", 800, menu =>
             {
@@ -99,7 +112,8 @@ namespace BloonFactory.UI
             {
                 menu.WithButton(typeof(BloonGroupModule))
                 .WithButton(typeof(MultipleRoundsModule))
-                .WithButton(typeof(SingleRoundModule));
+                .WithButton(typeof(SingleRoundModule))
+                .WithButton(typeof(ReplaceBloonModule));
             });
     }
 }
