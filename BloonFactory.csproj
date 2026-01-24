@@ -30,8 +30,7 @@
       </Reference>
     </ItemGroup>
     <ItemGroup>
-      <Folder Include="Modules\Actions\Game\" />
-      <Folder Include="Modules\Deprecated\" />
+      <Folder Include="Patches\" />
     </ItemGroup>
 
     <Import Project="..\btd6.targets" />

@@ -1,18 +1,23 @@
 using BloonFactory;
 using BloonFactory.LinkTypes;
+using BloonFactory.Modules.Tags;
 using BloonFactory.UI;
 using BTD_Mod_Helper;
 using BTD_Mod_Helper.Api;
 using BTD_Mod_Helper.Api.ModOptions;
 using FactoryCore.UI;
+using Harmony;
 using Il2CppAssets.Scripts.Data;
 using Il2CppAssets.Scripts.Models;
 using Il2CppAssets.Scripts.Models.Bloons;
 using Il2CppAssets.Scripts.Models.Rounds;
 using Il2CppAssets.Scripts.Unity;
+using Il2CppAssets.Scripts.Unity.UI_New.InGame;
 using MelonLoader;
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using UnityEngine;
 using UnityEngine.U2D;
 
@@ -31,7 +36,6 @@ public class BloonFactory : BloonsTD6Mod
         displayName = "Hide Incompatible Bloons",
         description = "Hides bloons that have a version higher than the client in the bloon browser. These bloons are likely not to work on this version."
     };
-
     public override void OnApplicationStart()
     {
         ModHelper.Msg<BloonFactory>("BloonFactory loaded!");

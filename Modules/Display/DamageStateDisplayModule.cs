@@ -90,6 +90,7 @@ namespace BloonFactory.Modules.Display
 
                 Guid guid = Guid.NewGuid();
                 ResourceHandler.AddTexture(guid.ToString(), texture);
+
                 model.icon = new SpriteReference() { guidRef = $"Ui[{guid.ToString()}]" };
             }
         }

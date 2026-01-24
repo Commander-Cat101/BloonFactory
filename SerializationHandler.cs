@@ -86,7 +86,7 @@ namespace BloonFactory
         {
             EnsureFolderExists();
 
-            foreach (var path in Directory.GetFiles(FolderDirectory).Where(f => f.EndsWith(".cstmbln")))
+            foreach (var path in    Directory.GetFiles(FolderDirectory).Where(f => f.EndsWith(".cstmbln")))
             {
                 var template = GetTemplateFromPath(path);
                 LoadTemplate(template);

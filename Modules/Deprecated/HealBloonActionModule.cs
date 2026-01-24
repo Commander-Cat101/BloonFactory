@@ -9,23 +9,22 @@ using Il2CppAssets.Scripts.Models.Bloons.Behaviors;
 using Il2CppAssets.Scripts.Unity;
 using Il2CppAssets.Scripts.Unity.UI_New.InGame;
 using Il2CppNinjaKiwi.Common.ResourceUtils;
-using MelonLoader;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BloonFactory.Modules.Actions
+namespace BloonFactory.Modules.Deprecated
 {
-    internal class SetSpeedActionModule : Module
+    internal class HealBloonActionModule : Module
     {
-        public const string BehaviorName = "BloonFactory-SetSpeedActionModule";
-        public override string Name => "Set Speed";
+        public override string Name => "Heal Bloon";
 
         public override void GetModuleProperties()
         {
-            AddProperty(new FloatModuleProperty("Multiplier", 2, 0, float.MaxValue));
+            AddProperty(new IntSliderModuleProperty("Heal Percent", 25, 0, 100));
+            AddProperty(new IntModuleProperty("Heal Additive", 0, int.MinValue, int.MaxValue));
         }
         public override void GetLinkNodes()
         {
@@ -35,7 +34,8 @@ namespace BloonFactory.Modules.Actions
         public override void ProcessModule()
         {
             var trigger = GetInputValue<Trigger>("Trigger");
-            trigger.bloonModel.AddBehavior(new SetSpeedPercentActionModel(BehaviorName, Id.ToString(), GetValue<float>("Multiplier"), false, 0, 0));
+            trigger.bloonModel.AddBehavior(new HealBloonActionModel("HealBloonAction", GetValue<int>("Heal Percent") / 100, GetValue<int>("Heal Additive"), Id.ToString()));
+            
         }
     }
 }

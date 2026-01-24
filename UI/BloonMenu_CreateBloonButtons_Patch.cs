@@ -1,4 +1,5 @@
 ﻿using BTD_Mod_Helper.Api;
+using BTD_Mod_Helper.Api.Internal;
 using BTD_Mod_Helper.Extensions;
 using CommandLine;
 using HarmonyLib;
@@ -10,11 +11,13 @@ using Il2CppAssets.Scripts.Unity.UI_New.InGame;
 using Il2CppAssets.Scripts.Unity.UI_New.InGame.BloonMenu;
 using Il2CppSystem.Collections.Generic;
 using MelonLoader;
+using MelonLoader.Utils;
+using System.IO;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace BloonFactory.Patches
+namespace BloonFactory.UI
 {
     [HarmonyPatch(typeof(GameModel), nameof(GameModel.GetBloon))]
     internal static class GameModel_GetBloon
@@ -60,7 +63,7 @@ namespace BloonFactory.Patches
             {
                 if (child.name == name)
                 {
-                    GameObject.Destroy(child);
+                    Object.Destroy(child);
                 }
             }
 
@@ -69,13 +72,29 @@ namespace BloonFactory.Patches
                 if (bloon.BloonTemplate.IsQueueForDeletion)
                     continue;
 
-                var obj = GameObject.Instantiate(__instance.spawnBloonButtonPrefab, __instance.bloonButtonContainer.transform);
+                var obj = Object.Instantiate(__instance.spawnBloonButtonPrefab, __instance.bloonButtonContainer.transform);
                 obj.name = name;
                 obj.RemoveComponent<SpawnBloonButton>();
-
+                
                 BloonModel model = InGame.instance.bridge.Model.GetBloon(bloon.BloonTemplate.TemplateId);
+                /*
+                string guid = model.icon.guidRef.Substring(3, model.icon.guidRef.Length - 4);
+
+                Texture2D texture = ResourceHandler.GetTexture(guid);
+
+                if (BloonFactory.CachedIcons.TryGetValue(guid, out byte[] data))
+                {
+                    ImageConversion.LoadImage(texture, data);
+                }
+                else
+                {
+                    texture = ModContent.GetTexture<BloonFactory>("BaseBloon");
+                }
+
+                var sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));*/
 
                 obj.transform.FindChild("Icon").GetComponent<Image>().SetSprite(model.icon);
+                obj.transform.FindChild("RawIcon").gameObject.SetActive(false);
 
                 obj.GetComponent<Button>().AddOnClick(() =>
                 {

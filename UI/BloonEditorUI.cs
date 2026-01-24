@@ -1,9 +1,11 @@
 ﻿using BloonFactory.LinkTypes;
 using BloonFactory.Modules.Actions;
+using BloonFactory.Modules.Actions.Game;
 using BloonFactory.Modules.Actions.Stats;
 using BloonFactory.Modules.Behaviors;
 using BloonFactory.Modules.Conditionals;
 using BloonFactory.Modules.Core;
+using BloonFactory.Modules.Deprecated;
 using BloonFactory.Modules.Display;
 using BloonFactory.Modules.Spawning;
 using BloonFactory.Modules.Tags;
@@ -47,7 +49,8 @@ namespace BloonFactory.UI
                 .WithButton(typeof(FortifiedTagModule))
                 .WithButton(typeof(MoabTagModule))
                 .WithButton(typeof(RegrowTagModule))
-                .WithButton(typeof(BadTagModule));
+                .WithButton(typeof(BadTagModule))
+                .WithButton(typeof(BossTagModule));
             })
             .WithNested("Behaviors", 800, menu =>
             {
@@ -74,23 +77,21 @@ namespace BloonFactory.UI
                     subMenu.WithButton(typeof(ModifyHealthActionModule))
                     .WithButton(typeof(ModifySpeedActionModule))
                     .WithButton(typeof(ModifyDamageActionModule))
-                    .WithButton(typeof(ModifyPropertyActionModule));
+                    .WithButton(typeof(ModifyPropertyActionModule))
+                    .WithButton(typeof(SetImmuneActionModule));
                 })
                 .WithNested("Game", 800, subMenu =>
                 {
-
+                    subMenu.WithButton(typeof(ModifyCashActionModule))
+                    .WithButton(typeof(ModifyLivesActionModule));
                 })
                 .WithButton(typeof(SellNearbyTowersActionModule))
                 .WithButton(typeof(BuffNearbyBloonsActionModule))
-                .WithButton(typeof(HealBloonActionModule))
-                .WithButton(typeof(DrainLivesActionModule))
                 .WithButton(typeof(DashActionModule))
-                .WithButton(typeof(SetImmuneActionModule))
                 .WithButton(typeof(SpawnBloonsActionModule))
                 .WithButton(typeof(RedirectBloonSpawnActionModule))
                 .WithButton(typeof(StunTowersActionModule))
-                .WithButton(typeof(RemoveAllEffectsActionModule))
-                .WithButton(typeof(SetSpeedActionModule));
+                .WithButton(typeof(RemoveAllEffectsActionModule));
             })
             .WithNested("Conditionals", 800, menu =>
             {
