@@ -1,4 +1,5 @@
 using BloonFactory;
+using BloonFactory.Handlers;
 using BloonFactory.LinkTypes;
 using BloonFactory.Modules.Tags;
 using BloonFactory.UI;
@@ -41,8 +42,11 @@ public class BloonFactory : BloonsTD6Mod
         ModHelper.Msg<BloonFactory>("BloonFactory loaded!");
         SerializationHandler.LoadAllTemplates();
     }
+
+    internal static GameModel currentGameModel;
     public override void OnNewGameModel(GameModel result)
     {
+        currentGameModel = result;
         foreach (var bloon in CustomBloon.Bloons)
         {
             try
