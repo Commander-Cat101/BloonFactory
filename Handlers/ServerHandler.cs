@@ -72,7 +72,7 @@ namespace BloonFactory.Handlers
             };
 
             HttpResponseMessage response = await client.PostAsync(URL + "uploadTemplate", new StringContent(JsonConvert.SerializeObject(request)));
-            
+
             if (!response.IsSuccessStatusCode)
             {
                 byte[] bytes = await response.Content.ReadAsByteArrayAsync();
