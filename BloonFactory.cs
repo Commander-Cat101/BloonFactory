@@ -51,30 +51,6 @@ public class BloonFactory : BloonsTD6Mod
     internal static GameModel currentGameModel;
     public override void OnGameModelLoaded(GameModel model)
     {
-        List<string> foundGuids = new List<string>();
-        foreach (var bloon in model.bloons)
-        {
-            RunBloon(ref foundGuids, bloon);
-        }
-    }
-    public void RunBloon(ref List<string> foundGuids, BloonModel bloon)
-    {
-        var beh = bloon.GetBehavior<PopEffectModel>();
-        if (beh != null)
-        {
-            string thing = "";
-
-            if (foundGuids.Contains(beh.soundEffect1Id.guidRef))
-                return;
-            foundGuids.Add(beh.soundEffect1Id.guidRef);
-
-            AudioClipReference[] sounds = { beh.soundEffect1Id, beh.soundEffect2Id, beh.soundEffect3Id, beh.soundEffect4Id};
-            foreach (var sound in sounds)
-            {
-                thing += $@"new AudioClipReference(""{sound.guidRef}""), ";
-            }
-            MelonLogger.Msg($"{bloon.id}  -  {thing}");
-        }
     }
     public override void OnNewGameModel(GameModel result)
     {
