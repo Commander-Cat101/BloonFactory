@@ -69,7 +69,7 @@ namespace BloonFactory.Modules.Conditionals
                         break;
                     case "3":
                         float percThroughMap = __instance.bloon.distanceTraveled / __instance.bloon.path.totalPathLength;
-                        value1 = (int)percThroughMap * 100;
+                        value1 = (int)(percThroughMap * 100);
                         break;
                     case "4":
                         value1 = (int)__instance.bloon.Health;
