@@ -5,6 +5,7 @@ using FactoryCore.API.ModuleValues;
 using HarmonyLib;
 using Il2CppAssets.Scripts.Models.Bloons.Behaviors;
 using Il2CppAssets.Scripts.Simulation.Bloons.Behaviors;
+using Il2CppAssets.Scripts.Unity.UI_New.InGame;
 using Il2CppNinjaKiwi.Common.ResourceUtils;
 using MelonLoader;
 
@@ -40,7 +41,7 @@ namespace BloonFactory.Modules.Actions
             {
                 if (__instance.modl.name == BehaviorName)
                 {
-                    foreach (var tower in __instance)
+                    foreach (var tower in InGame.instance.GetTowers())
                     {
                         var ability = tower.GetAbilities().FirstOrDefault(a => a.isActivated);
                         if (ability != null)

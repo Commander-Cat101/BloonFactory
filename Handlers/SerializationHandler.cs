@@ -3,6 +3,13 @@ using BloonFactory.Modules.Conditionals;
 using BloonFactory.Modules.Deprecated;
 using BTD_Mod_Helper.Extensions;
 using Harmony;
+using Il2CppAssets.Scripts.GameEditor.UI;
+using Il2CppAssets.Scripts.Unity;
+using Il2CppAssets.Scripts.Unity.GameEditor;
+using Il2CppAssets.Scripts.Unity.UI_New;
+using Il2CppAssets.Scripts.Unity.UI_New.DailyChallenge;
+using Il2CppAssets.Scripts.Unity.UI_New.InGame;
+using Il2CppAssets.Scripts.Unity.UI_New.InGame.EditorMenus;
 using Il2CppNinjaKiwi.LiNK.Transfer;
 using MelonLoader;
 using MelonLoader.Utils;
@@ -37,12 +44,18 @@ namespace BloonFactory.Handlers
         {
             EnsureFolderExists();
 
+            if (template.IsQueueForDeletion)
+                return;
+
             var content = JsonConvert.SerializeObject(template, Settings);
             File.WriteAllText(path + FileExtention, content);
         }
         internal static void SaveTemplate(BloonTemplate template)
         {
             EnsureFolderExists();
+
+            if (template.IsQueueForDeletion)
+                return;
 
             var content = JsonConvert.SerializeObject(template, Settings);
             var path = Path.Combine(FolderDirectory, template.Guid.ToString() + FileExtention);
@@ -84,7 +97,6 @@ namespace BloonFactory.Handlers
                 template.SetReferences();
                 Templates.Add(template);
             }
-
         }
         internal static void LoadAllTemplates()
         {

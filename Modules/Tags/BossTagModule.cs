@@ -69,7 +69,7 @@ namespace BloonFactory.Modules.Tags
         [HarmonyPostfix]
         private static void Postfix(BossUI __instance)
         {
-            if (InGameData.CurrentGame != null || InGameData.CurrentGame.bossData != null || InGameData.CurrentGame.bossRushData != null)
+            if (InGameData.CurrentGame == null || InGameData.CurrentGame.bossData != null || InGameData.CurrentGame.bossRushData != null)
                 return;
 
             if (__instance == null) return;

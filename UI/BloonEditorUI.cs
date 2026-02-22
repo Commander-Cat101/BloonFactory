@@ -8,6 +8,7 @@ using BloonFactory.Modules.Conditionals;
 using BloonFactory.Modules.Core;
 using BloonFactory.Modules.Deprecated;
 using BloonFactory.Modules.Display;
+using BloonFactory.Modules.Sounds;
 using BloonFactory.Modules.Spawning;
 using BloonFactory.Modules.Tags;
 using BloonFactory.Modules.Triggers;
@@ -99,6 +100,14 @@ namespace BloonFactory.UI
                 menu.WithButton(typeof(WaitTimeActionModule))
                 .WithButton(typeof(CompareActionModule))
                 .WithButton(typeof(RandomActionModule));
+            })
+            .WithNested("Sounds", 800, menu =>
+            {
+                menu.WithButton(typeof(SoundModule))
+                .WithButton(typeof(DamageSoundsModule))
+                .WithButton(typeof(PlaySoundActionModule))
+                .WithButton(typeof(SoundOnSpawnModule));
+                
             })
             .WithNested("Display", 800, menu =>
             {
