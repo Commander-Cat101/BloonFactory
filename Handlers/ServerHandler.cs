@@ -53,8 +53,6 @@ namespace BloonFactory.Handlers
         }
         internal static async Task<(bool success, string errorCode)> UploadTemplate(BloonTemplate template, BloonCategory category, string description)
         {
-            return (false, "Uploading templates is disabled");
-
             string creator = Game.Player.LiNKAccount?.DisplayName;
             if (string.IsNullOrEmpty(creator))
             {
