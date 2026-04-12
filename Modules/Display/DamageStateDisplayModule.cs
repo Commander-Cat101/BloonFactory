@@ -1,4 +1,5 @@
-﻿using BloonFactory.LinkTypes;
+﻿using BloonFactory.Handlers;
+using BloonFactory.LinkTypes;
 using BloonFactory.ModuleProperties;
 using BTD_Mod_Helper.Api;
 using BTD_Mod_Helper.Api.Internal;
@@ -90,6 +91,7 @@ namespace BloonFactory.Modules.Display
 
                 Guid guid = Guid.NewGuid();
                 ResourceHandler.AddTexture(guid.ToString(), texture);
+
                 model.icon = new SpriteReference() { guidRef = $"Ui[{guid.ToString()}]" };
             }
         }

@@ -32,7 +32,7 @@ namespace BloonFactory.Modules.Triggers
         public override void ProcessModule()
         {
             var guids = new Il2CppStringArray(GetOutputsModules("Trigger").AsGuids());
-            currentModel.AddBehavior(new OnDamagedTriggerModel("OnDamagedTriggerModel", guids, GetValue<float>("Cooldown"), GetValue<int>("Chance") / 100));
+            currentModel.AddBehavior(new OnDamagedTriggerModel("OnDamagedTriggerModel", guids, GetValue<float>("Cooldown"), GetValue<int>("Chance") / 100, false, (Il2Cpp.BloonProperties)95));
 
             GetOutputsModules("Trigger").ProcessAll();
         }

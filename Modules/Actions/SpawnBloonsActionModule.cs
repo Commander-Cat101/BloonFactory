@@ -1,7 +1,6 @@
 ﻿using BloonFactory.LinkTypes;
 using BloonFactory.ModuleProperties;
 using BTD_Mod_Helper.Extensions;
-using FactoryCore.API;
 using FactoryCore.API.ModuleProperties;
 using FactoryCore.API.ModuleValues;
 using Il2CppAssets.Scripts.Models.Bloons.Behaviors;
@@ -34,8 +33,8 @@ namespace BloonFactory.Modules.Actions
             {
                 var trigger = GetInputValue<Trigger>("Trigger");
                 string id = GetValue<string>("BloonId");
-
-                if (!Game.instance.model.bloons.Any(a => a.id == id))
+                
+                if (!Il2CppAssets.Scripts.Unity.Game.instance.model.bloons.Any(a => a.id == id))
                     return;
 
                 trigger.bloonModel.AddBehavior(new SpawnBloonsActionModel("SpawnBloonsActionModel", Id.ToString(), id, GetValue<int>("Count"), 0.02f

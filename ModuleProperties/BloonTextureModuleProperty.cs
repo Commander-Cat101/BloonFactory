@@ -1,17 +1,9 @@
 ﻿using BTD_Mod_Helper.Api;
 using BTD_Mod_Helper.Api.Components;
 using BTD_Mod_Helper.Api.Enums;
-using BTD_Mod_Helper.Extensions;
-using FactoryCore.API;
 using FactoryCore.API.ModuleValues;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.Assertions;
-using static Il2CppNinjaKiwi.GUTS.Models.BossRushRandomizerSettings;
 using TaskScheduler = BTD_Mod_Helper.Api.TaskScheduler;
 
 namespace BloonFactory.ModuleProperties

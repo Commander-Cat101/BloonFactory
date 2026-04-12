@@ -1,24 +1,35 @@
-﻿using BloonFactory.Modules.Core;
-using BTD_Mod_Helper;
-using BTD_Mod_Helper.Api;
+﻿using BloonFactory.Modules.Actions.Stats;
+using BloonFactory.Modules.Conditionals;
+using BloonFactory.Modules.Deprecated;
 using BTD_Mod_Helper.Extensions;
-using FactoryCore.API;
-using Il2CppSystem.Security.Cryptography;
+using Harmony;
+using Il2CppAssets.Scripts.GameEditor.UI;
+using Il2CppAssets.Scripts.Unity;
+using Il2CppAssets.Scripts.Unity.GameEditor;
+using Il2CppAssets.Scripts.Unity.UI_New;
+using Il2CppAssets.Scripts.Unity.UI_New.DailyChallenge;
+using Il2CppAssets.Scripts.Unity.UI_New.InGame;
+using Il2CppAssets.Scripts.Unity.UI_New.InGame.EditorMenus;
+using Il2CppNinjaKiwi.LiNK.Transfer;
 using MelonLoader;
 using MelonLoader.Utils;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 namespace BloonFactory.Handlers
 {
     internal static class SerializationHandler
     {
         internal static List<BloonTemplate> Templates = new List<BloonTemplate>();
-        internal static JsonSerializerSettings Settings => new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto, Formatting = Formatting.Indented };
+        internal static JsonSerializerSettings Settings => new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto, Formatting = Formatting.Indented, SerializationBinder = new ResolverSerializationBinder() };
         internal static string FolderDirectory => Path.Combine(MelonEnvironment.ModsDirectory, "Factory");
 
         internal const string FileExtention = ".cstmbln";
@@ -33,12 +44,18 @@ namespace BloonFactory.Handlers
         {
             EnsureFolderExists();
 
+            if (template.IsQueueForDeletion)
+                return;
+
             var content = JsonConvert.SerializeObject(template, Settings);
             File.WriteAllText(path + FileExtention, content);
         }
         internal static void SaveTemplate(BloonTemplate template)
         {
             EnsureFolderExists();
+
+            if (template.IsQueueForDeletion)
+                return;
 
             var content = JsonConvert.SerializeObject(template, Settings);
             var path = Path.Combine(FolderDirectory, template.Guid.ToString() + FileExtention);
@@ -80,7 +97,6 @@ namespace BloonFactory.Handlers
                 template.SetReferences();
                 Templates.Add(template);
             }
-            
         }
         internal static void LoadAllTemplates()
         {
@@ -115,6 +131,25 @@ namespace BloonFactory.Handlers
             {
                 File.Delete(path);
             }
+        }
+    }    
+    public class ResolverSerializationBinder : DefaultSerializationBinder
+    {
+        public Dictionary<string, Type> ResolveTypes = new Dictionary<string, Type>()
+        {
+            { "BloonFactory.Modules.Actions.SetSpeedActionModule", typeof(SetSpeedActionModule) },
+            { "BloonFactory.Modules.Actions.WaitTimeActionModule", typeof(WaitTimeActionModule) },
+            { "BloonFactory.Modules.Actions.SetImmuneActionModule", typeof(SetImmuneActionModule) },
+            { "BloonFactory.Modules.Actions.DrainLivesActionModule", typeof(DrainLivesActionModule) },
+            { "BloonFactory.Modules.Actions.HealBloonActionModule", typeof(HealBloonActionModule) }
+        };
+        public override Type BindToType(string assemblyName, string typeName)
+        {
+            if (ResolveTypes.TryGetValue(typeName, out var type))
+            {
+                return type;
+            }
+            return base.BindToType(assemblyName, typeName);
         }
     }
 }

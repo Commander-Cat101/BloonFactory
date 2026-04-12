@@ -1,4 +1,5 @@
-﻿using BloonFactory.Modules;
+﻿using BloonFactory.Handlers;
+using BloonFactory.Modules;
 using BloonFactory.Modules.Core;
 using BloonFactory.Modules.Display;
 using BTD_Mod_Helper.Api;
@@ -71,10 +72,6 @@ namespace BloonFactory
             }
 
             DamageStateDisplayModule.DamageStateFix(model, BloonTemplate);
-            if (model.icon.guidRef == "")
-            {
-                model.icon = GetSpriteReference("BaseBloon");
-            }
             model.dontShowInSandbox = true;
         }
         public override IEnumerable<ModContent> Load()

@@ -1,24 +1,25 @@
 ﻿using BloonFactory.LinkTypes;
 using BTD_Mod_Helper.Extensions;
-using FactoryCore.API;
 using FactoryCore.API.ModuleProperties;
 using FactoryCore.API.ModuleValues;
 using Il2CppAssets.Scripts.Models.Bloons.Behaviors;
-using Il2CppNinjaKiwi.Common.ResourceUtils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BloonFactory.Modules.Actions
+namespace BloonFactory.Modules.Actions.Stats
 {
-    internal class SetImmuneActionModule : Module
+    internal class ModifyDamageActionModule : Module
     {
-        public override string Name => "Set Immune";
+        public static string BehaviorId => "ModifyDamageActionModule";
+        public override string Name => "Modify Damage";
+
         public override void GetModuleProperties()
         {
-            AddProperty(new BoolModuleProperty("Set Immune", true));
+            AddProperty(new EnumModuleProperty("Type", ["Add", "Subtract", "Set"], 0));
+            AddProperty(new IntModuleProperty("Value", 0, int.MinValue, int.MaxValue));
         }
         public override void GetLinkNodes()
         {
@@ -28,7 +29,7 @@ namespace BloonFactory.Modules.Actions
         public override void ProcessModule()
         {
             var trigger = GetInputValue<Trigger>("Trigger");
-            trigger.bloonModel.AddBehavior(new SetImmuneActionModel("SetImmuneActionModel", Id.ToString(), GetValue<bool>("Set Immune"), new AudioClipReference("")));
+            trigger.bloonModel.AddBehavior(new SetPositionActionModel(BehaviorId, Id.ToString(), GetValue<int>("Type"), GetValue<int>("Value")));
         }
     }
 }

@@ -1,11 +1,15 @@
-﻿using BTD_Mod_Helper.Api;
+﻿using BloonFactory.Handlers;
+using BTD_Mod_Helper.Api;
 using BTD_Mod_Helper.Api.Components;
 using BTD_Mod_Helper.Api.Enums;
 using BTD_Mod_Helper.Api.Legends;
 using BTD_Mod_Helper.Extensions;
+using Il2CppAssets.Scripts.Simulation;
+using Il2CppAssets.Scripts.Simulation.Track;
 using Il2CppAssets.Scripts.Unity;
 using Il2CppAssets.Scripts.Unity.Menu;
 using Il2CppAssets.Scripts.Unity.UI_New.ChallengeEditor;
+using Il2CppAssets.Scripts.Unity.UI_New.InGame;
 using Il2CppNinjaKiwi.Common;
 using MelonLoader;
 using Newtonsoft.Json;
@@ -68,7 +72,6 @@ namespace BloonFactory.UI
                     panel.gameObject.SetActive(false);
                 }
             });
-            
 
             ModifyElements();
             AddElements();

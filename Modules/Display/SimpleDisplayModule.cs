@@ -1,16 +1,19 @@
 ﻿using BloonFactory.LinkTypes;
 using BloonFactory.ModuleProperties;
+using BTD_Mod_Helper;
 using BTD_Mod_Helper.Api;
+using BTD_Mod_Helper.Api.Helpers;
 using BTD_Mod_Helper.Api.Internal;
 using BTD_Mod_Helper.Extensions;
-using FactoryCore.API;
-using FactoryCore.API.ModuleProperties;
 using FactoryCore.API.ModuleValues;
-using Harmony;
+using HarmonyLib;
 using Il2CppNinjaKiwi.Common.ResourceUtils;
 using MelonLoader;
+using MelonLoader.Utils;
 using System;
+using System.IO;
 using UnityEngine;
+using UnityEngine.U2D;
 
 namespace BloonFactory.Modules.Display
 {
@@ -38,9 +41,15 @@ namespace BloonFactory.Modules.Display
 
             if (visuals.bloonModel.icon.guidRef == "")
             {
+                Texture2D texture = GenerateTexture();
                 Guid guid = Guid.NewGuid();
-                ResourceHandler.AddTexture(guid.ToString(), GenerateTexture());
+
+                ResourceHandler.AddTexture(guid.ToString(), texture);
+
                 visuals.bloonModel.icon = new SpriteReference() { guidRef = $"Ui[{guid.ToString()}]" };
+
+                MelonLogger.Msg($"Added icon for bloon {visuals.bloonModel.name} with GUID {guid}");
+
             }
         }
         public Texture2D GenerateTexture()
@@ -56,3 +65,4 @@ namespace BloonFactory.Modules.Display
         }
     }
 }
+
