@@ -40,7 +40,8 @@ namespace BloonFactory.Modules.Actions
                 trigger.bloonModel.AddBehavior(new FireballActionModel("FireballActionModel", Id.ToString()
                     , new PrefabReference("eda503b848df15243b0d0cd1e6625582"), new PrefabReference("e5bbca84e860c9b418a7d6633dab441d"), new PrefabReference("4f01d8a0ba9df3148b8a2156cb8ee521")
                     , new Il2CppReferenceArray<AudioClipReference>([new AudioClipReference("e7a3d918fe2bddd4792b5ccba7fc8e26"), new AudioClipReference("a776ffad72d09614c8f9b08f925621ca")])
-                    , GetValue<int>("Count"), 0.5f, GetValue<float>("Stun Duration"), GetValue<float>("Magma Duration"), GetValue<float>("Magma Radius"), 1.5f, -0.2f, "BlastFireball"
+                    , GetValue<int>("Count"), 0.5f, GetValue<float>("Stun Duration"), GetValue<float>("Magma Duration"), GetValue<float>("Magma Radius"), 1.5f, "BlastFireball"
+                    , new Il2CppStringArray(0), new Il2CppStringArray(0), new Il2CppStructArray<int>(0)
                 ));
             }
             catch (Exception ex)

@@ -38,7 +38,7 @@ namespace BloonFactory.Modules.Actions
                     return;
 
                 trigger.bloonModel.AddBehavior(new SpawnBloonsActionModel("SpawnBloonsActionModel", Id.ToString(), id, GetValue<int>("Count"), 0.02f
-                    , GetValue<float>("Distance Ahead"), 0, 0, new Il2CppStringArray(["BloonariusAttackSpew"]), new Il2CppStringArray(["BloonariusAttackSpewMoab"]), 1.5f, false, "Bloonarius"));
+                    , GetValue<float>("Distance Ahead"), 0, 0, new Il2CppStringArray(["BloonariusAttackSpew"]), new Il2CppStringArray(["BloonariusAttackSpewMoab"]), 1.5f, false, 0f, 0f, "Bloonarius"));
             }
             catch (Exception ex)
             {
