@@ -3,7 +3,7 @@ namespace BloonFactory;
 public static class ModHelperData
 {
     public const string WorksOnVersion = "53";
-    public const string Version = "1.1.0";
+    public const string Version = "1.1.1";
     public const string Name = "BloonFactory";
 
     public const string Description = "A mod for creating custom bloons";
