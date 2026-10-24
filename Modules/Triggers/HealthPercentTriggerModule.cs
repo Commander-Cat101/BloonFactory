@@ -1,17 +1,8 @@
 ﻿using BloonFactory.LinkTypes;
 using BTD_Mod_Helper.Extensions;
-using FactoryCore.API;
 using FactoryCore.API.ModuleValues;
-using HarmonyLib;
 using Il2CppAssets.Scripts.Models.Bloons.Behaviors;
-using Il2CppAssets.Scripts.Simulation.Bloons.Behaviors;
 using Il2CppInterop.Runtime.InteropTypes.Arrays;
-using MelonLoader;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BloonFactory.Modules.Triggers
 {

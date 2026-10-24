@@ -51,6 +51,7 @@ public class BloonFactory : BloonsTD6Mod
     internal static GameModel currentGameModel;
     public override void OnGameModelLoaded(GameModel model)
     {
+        
     }
     public override void OnNewGameModel(GameModel result)
     {

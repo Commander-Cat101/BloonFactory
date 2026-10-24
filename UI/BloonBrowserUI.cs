@@ -108,20 +108,12 @@ namespace BloonFactory.UI
                 RefreshPage();
                 MenuManager.instance.buttonClick3Sound.Play("ClickSounds");
             });
-            GameMenu.firstPageBtn.SetOnClick(() => { 
-                SetPage(0);
-                MenuManager.instance.buttonClick2Sound.Play("ClickSounds");
-            });
             GameMenu.previousPageBtn.SetOnClick(() =>{ 
                 SetPage(currentPage - 1);
                 MenuManager.instance.buttonClick2Sound.Play("ClickSounds");
             });
             GameMenu.nextPageBtn.SetOnClick(() => {
                 SetPage(currentPage + 1);
-                MenuManager.instance.buttonClick2Sound.Play("ClickSounds");
-            });
-            GameMenu.lastPageBtn.SetOnClick(() => {
-                SetPage(TotalPages - 1);
                 MenuManager.instance.buttonClick2Sound.Play("ClickSounds");
             });
         }
@@ -227,11 +219,9 @@ namespace BloonFactory.UI
         }
         public void UpdateBottomBar()
         {
-            GameMenu.firstPageBtn.interactable = TotalPages >= 2 && currentPage > 0;
             GameMenu.previousPageBtn.interactable = TotalPages >= 2 && currentPage > 0;
 
             GameMenu.nextPageBtn.interactable = TotalPages >= 2 && currentPage < TotalPages - 1;
-            GameMenu.lastPageBtn.interactable = TotalPages >= 2 && currentPage < TotalPages - 1;
 
             GameMenu.totalPages = TotalPages;
             GameMenu.SetCurrentPage(currentPage + 1);

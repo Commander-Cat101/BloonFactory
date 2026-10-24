@@ -11,6 +11,7 @@ using Il2CppNinjaKiwi.Common;
 using Il2CppNinjaKiwi.Common.ResourceUtils;
 using System;
 using System.Linq;
+using MelonLoader;
 using UnityEngine;
 using UnityEngine.UI;
 using static Il2CppSystem.Linq.Expressions.Interpreter.CastInstruction.CastInstructionNoT;
@@ -21,8 +22,6 @@ namespace BloonFactory.ModuleProperties
 {
     public class BloonEnumModuleProperty : ModuleProperty
     {
-        private static SpriteReference Cross => ModContent.GetSpriteReference<BloonFactory>("Cross");
-
         private string TemplateId;
         private string DisplayName;
 
@@ -53,7 +52,7 @@ namespace BloonFactory.ModuleProperties
             {
                 CreateContentForInput(value);
             }));
-            inputField.InputField.onSelect.AddListener(new Action<string>(value =>
+            inputField.InputField.onSelect.AddListener(new Action<string>(_ =>
             {
                 MenuManager.instance.buttonClickSound.Play("ClickSounds");
             }));
@@ -76,6 +75,55 @@ namespace BloonFactory.ModuleProperties
             SetState(State.Selected);
             return panel;
         }
+
+        public override ModHelperPanel CreateTemplate()
+        {
+            var panel = ModHelperPanel.Create(new Info("EnumModuleProperty", 0, 0, 1000, 100));
+
+            panel.AddText(new Info("Text", -250, 0, 400, 100), "Property Name", 50, Il2CppTMPro.TextAlignmentOptions.Left).EnableAutoSizing();
+
+            var inputField = panel.AddInputField(new Info("Type", 225, 0, 450, 80), "Default Value", VanillaSprites.BlueInsertPanelRound);
+            
+            inputField.InputField.onSelect.AddListener(new Action<string>(_ =>
+            {
+                MenuManager.instance.buttonClickSound.Play("ClickSounds");
+            }));
+            inputField.Text.Text.overflowMode = Il2CppTMPro.TextOverflowModes.Overflow;
+            inputField.AddButton(new Info("Icon", -40, 0, 60, 60, new Vector2(1, 0.5f)), VanillaSprites.SearchIcon, new Action(() =>
+            {
+                MenuManager.instance.buttonClickSound.Play("ClickSounds");
+            }));
+
+            var scrollPanel = panel.AddPanel(new Info("Options", 225, 10, 450, 300, new Vector2(0.5f, 0), new Vector2(0.5f, 1)), null);
+            var vert = scrollPanel.AddComponent<VerticalLayoutGroup>();
+            vert.childControlHeight = false;
+            scrollPanel.FitContent(vertical: ContentSizeFitter.FitMode.MinSize);
+
+            return panel;
+        }
+
+        public override void SetupProperty(ModHelperPanel root)
+        {
+            var value = Module.GetValue<string>(Name);
+            BloonModel selectedBloon = Bloons.Where(a => a.id == value).FirstOrDefault();
+
+            root.transform.Find("Text").GetComponent<ModHelperText>().SetText(DisplayName);
+            inputField = root.transform.Find("Type").GetComponent<ModHelperInputField>();
+            inputField.SetText(selectedBloon == null ? "Unloaded Bloon" : selectedBloon.name, false);
+            inputField.InputField.onValueChanged.AddListener(new Action<string>(CreateContentForInput));
+
+            scrollPanel = root.transform.Find("Options").GetComponent<ModHelperScrollPanel>();
+            
+            button = inputField.transform.Find("Icon").GetComponent<ModHelperButton>();
+            
+            if (value == string.Empty)
+            {
+                SetState(State.Selecting);
+                return;
+            }
+            SetState(State.Selected);
+        }
+
         public void CreateContentForInput(string input)
         {
             if (scrollPanel == null)
