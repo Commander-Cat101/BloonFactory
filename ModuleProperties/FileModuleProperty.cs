@@ -28,16 +28,6 @@ namespace BloonFactory.ModuleProperties
             Name = name;
             Filter = filter;
         }
-        public override ModHelperPanel GetVisual(ModHelperPanel root)
-        {
-            var panel = root.AddPanel(new Info("FileModuleProperty", 0, 0, 1000, 300));
-            var button = panel.AddButton(new Info("Button", 0, 0, 750, 250, new Vector2(0.5f, 0.5f)), VanillaSprites.GreenBtnLong, new Action(ButtonPressed));
-            Text = button.AddText(new Info("Text", 0, 0, 700, 200, new Vector2(0.5f, 0.5f)), "Select File");
-            Text.EnableAutoSizing(100, 0);
-
-            SetText();
-            return panel;
-        }
 
         public override ModHelperPanel CreateTemplate()
         {

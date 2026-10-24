@@ -38,44 +38,6 @@ namespace BloonFactory.ModuleProperties
             DisplayName = displayName;
             TemplateId = templateId;
         }
-        public override ModHelperPanel GetVisual(ModHelperPanel root)
-        {
-            var value = Module.GetValue<string>(Name);
-            BloonModel selectedBloon = Bloons.Where(a => a.id == value).FirstOrDefault();
-
-
-            var panel = root.AddPanel(new Info("EnumModuleProperty", 0, 0, 1000, 100));
-
-            panel.AddText(new Info("Text", -250, 0, 400, 100), $"{DisplayName}", 50, Il2CppTMPro.TextAlignmentOptions.Left).EnableAutoSizing();
-
-            inputField = panel.AddInputField(new Info("Type", 225, 0, 450, 80), selectedBloon == null ? "Unloaded Bloon" : selectedBloon.name, VanillaSprites.BlueInsertPanelRound, new Action<string>(value =>
-            {
-                CreateContentForInput(value);
-            }));
-            inputField.InputField.onSelect.AddListener(new Action<string>(_ =>
-            {
-                MenuManager.instance.buttonClickSound.Play("ClickSounds");
-            }));
-            inputField.Text.Text.overflowMode = Il2CppTMPro.TextOverflowModes.Overflow;
-            button = inputField.AddButton(new Info("Icon", -40, 0, 60, 60, new Vector2(1, 0.5f)), VanillaSprites.SearchIcon, new Action(() =>
-            {
-                MenuManager.instance.buttonClickSound.Play("ClickSounds");
-            }));
-
-            scrollPanel = panel.AddPanel(new Info("Options", 225, 10, 450, 300, new Vector2(0.5f, 0), new Vector2(0.5f, 1)), null);
-            var vert = scrollPanel.AddComponent<VerticalLayoutGroup>();
-            vert.childControlHeight = false;
-            scrollPanel.FitContent(vertical: ContentSizeFitter.FitMode.MinSize);
-
-            if (value == string.Empty)
-            {
-                SetState(State.Selecting);
-                return panel;
-            }
-            SetState(State.Selected);
-            return panel;
-        }
-
         public override ModHelperPanel CreateTemplate()
         {
             var panel = ModHelperPanel.Create(new Info("EnumModuleProperty", 0, 0, 1000, 100));

@@ -33,41 +33,6 @@ namespace BloonFactory.ModuleProperties
             GetSound = getSound;
             Name = Guid.NewGuid().ToString();
         }
-        public override ModHelperPanel GetVisual(ModHelperPanel root)
-        {
-            //Play a dummy sound otherwise causes an error on first play
-            Game.instance.audioFactory.PlaySound(Sounds.GoldenHitSounds[0], "FX", uniqueId: uniqueId, volume: 0);
-
-            var panel = root.AddPanel(new Info("BloonTextureModuleValue", 0, 0, 1000, 150));
-
-            var slider = panel.AddSlider(new Info("Slider", 425, 0, 700, 70, new Vector2(0, 0.5f)), 0, 0, 1, 0, new Vector2(0, 0));
-            slider.Slider.interactable = false;
-            slider.DefaultNotch.DeleteObject();
-
-            var button = panel.AddButton(new Info("Play", -125, 0, 100, 100, new Vector2(1, 0.5f)), VanillaSprites.ArrowHideBtn, new Action(() =>
-            {
-
-                var audioClip = GetSound.Invoke();
-
-                TaskScheduler.ScheduleTask(() =>
-                {
-                    Game.instance.audioFactory.PlaySound(audioClip, "FX", uniqueId: uniqueId);
-
-                    AudioSource source = Game.instance.audioFactory.FindSourceByUniqueId(uniqueId);
-
-                    if (CoroutineHandle != null)
-                    {
-                        MelonCoroutines.Stop(CoroutineHandle);
-                    }
-
-                    CoroutineHandle = MelonCoroutines.Start(HandleSoundClip(source, slider));
-                });
-            }));
-            button.transform.rotation = Quaternion.Euler(0, 0, 90);
-
-            return panel;
-        }
-
         public override ModHelperPanel CreateTemplate()
         {
             var panel = ModHelperPanel.Create(new Info("BloonTextureModuleValue", 0, 0, 1000, 150));

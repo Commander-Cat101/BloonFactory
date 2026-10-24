@@ -16,23 +16,6 @@ namespace BloonFactory.ModuleProperties
         {
             GenerateTexture = getTexture;
         }
-        public override ModHelperPanel GetVisual(ModHelperPanel root)
-        {
-            var panel = root.AddPanel(new Info("BloonTextureModuleValue", 0, 0, 1000, 500));
-            var image = panel.AddImage(new Info("BloonTexture", 0, 0, 500, 500, new Vector2(0.5f, 0.5f)), ModContent.GetSprite<BloonFactory>("BaseBloon"));
-            
-            panel.AddButton(new Info("Reload", -100, -50, 100, 100, new Vector2(1, 1)), VanillaSprites.RestartBtn, new Action(() =>
-            {
-                UpdateImage(image);
-            }));
-            TaskScheduler.ScheduleTask(() =>
-            {
-                UpdateImage(image);
-            });
-
-            return panel;
-        }
-
         public override ModHelperPanel CreateTemplate()
         {
             return ModHelperPanel.Create(new Info("BloonTextureModuleValue", 0, 0, 1000, 500));
