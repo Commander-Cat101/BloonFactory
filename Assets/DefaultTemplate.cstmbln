@@ -93,10 +93,10 @@
       "PropertiesData": {
         "Color": {
           "$type": "FactoryCore.API.ModuleProperties.SavedColor, FactoryCore",
-          "r": 1.0,
-          "g": 0.654902,
-          "b": 1.0,
-          "a": 1.0
+          "R": 1.0,
+          "G": 0.654902,
+          "B": 1.0,
+          "A": 1.0
         }
       },
       "Outputs": [

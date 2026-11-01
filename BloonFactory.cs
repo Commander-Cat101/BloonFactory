@@ -35,6 +35,8 @@ namespace BloonFactory;
 
 public class BloonFactory : BloonsTD6Mod
 {
+    public static readonly ModSettingInt DummyBloonAmount = new ModSettingInt(16) { displayName = "Dummy Bloon Amount", min = 1, max = 256, description = "The amount of custom bloons that can be loaded. Increase if you have lots of bloons.", requiresRestart = true };
+    
     public static readonly ModSettingCategory BloonBrowser = new ModSettingCategory("Bloon Browser");
 
     public static readonly ModSettingBool HideIncompatibleBloons = new(true)
@@ -43,16 +45,15 @@ public class BloonFactory : BloonsTD6Mod
         displayName = "Hide Incompatible Bloons",
         description = "Hides bloons that have a version higher than the client in the bloon browser. These bloons are likely not to work on this version."
     };
+    
+    
     public override void OnApplicationStart()
     {
         ModHelper.Msg<BloonFactory>("BloonFactory loaded!");
         SerializationHandler.LoadAllTemplates();
     }
     internal static GameModel currentGameModel;
-    public override void OnGameModelLoaded(GameModel model)
-    {
-        
-    }
+    
     public override void OnNewGameModel(GameModel result)
     {
         currentGameModel = result;

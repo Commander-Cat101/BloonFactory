@@ -27,7 +27,7 @@ namespace BloonFactory.UI
             modsButton.name = "BloonEditor";
             modsButton.transform.FindChild("LimitedTime").gameObject.SetActive(false);
             modsButton.GetComponentInChildren<Image>().SetSprite(VanillaSprites.AlternateBloonsBtn);
-            modsButton.GetComponentInChildren<Button>().SetOnClick(() => { ModGameMenu.Open<EditSelectorUI>(); MenuManager.instance.buttonClickSound.Play("ClickSounds"); });
+            modsButton.GetComponentInChildren<Button>().SetOnClick(() => { ModGameMenu.Open<BloonSelectorUI>(); MenuManager.instance.buttonClickSound.Play("ClickSounds"); });
 
             var matchLocalPosition = modsButton.transform.gameObject.AddComponent<MatchLocalPosition>();
             matchLocalPosition.transformToCopy = trophyStore.transform;

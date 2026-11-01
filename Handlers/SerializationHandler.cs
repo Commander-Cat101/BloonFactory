@@ -118,6 +118,10 @@ namespace BloonFactory.Handlers
             template.Name = name;
             template.Guid = Guid.NewGuid();
             template.SetReferences();
+            
+            template.CreationTime = DateTime.Now;
+            template.UUID = template.Guid.ToString();
+            
             SaveTemplate(template);
             Templates.Add(template);
             return template;
@@ -125,7 +129,11 @@ namespace BloonFactory.Handlers
         internal static void DeleteTemplate(BloonTemplate template)
         {
             EnsureFolderExists();
-            var path = Path.Combine(FolderDirectory, template.Guid.ToString() + FileExtention);
+            if (template == null)
+                MelonLogger.Msg("TEMPLATE IS NULL");
+            if (template.Guid == null)
+                MelonLogger.Msg("GUID IS NULL");
+            var path = Path.Combine(FolderDirectory, template.Guid + FileExtention);
             template.IsQueueForDeletion = true;
             if (File.Exists(path))
             {
