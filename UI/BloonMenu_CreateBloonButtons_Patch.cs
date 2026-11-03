@@ -1,4 +1,5 @@
-﻿using BTD_Mod_Helper.Api;
+﻿using System;
+using BTD_Mod_Helper.Api;
 using BTD_Mod_Helper.Api.Internal;
 using BTD_Mod_Helper.Extensions;
 using CommandLine;
@@ -14,8 +15,10 @@ using MelonLoader;
 using MelonLoader.Utils;
 using System.IO;
 using System.Linq;
+using BloonFactory.Handlers;
 using UnityEngine;
 using UnityEngine.UI;
+using Object = UnityEngine.Object;
 
 namespace BloonFactory.UI
 {
@@ -25,24 +28,36 @@ namespace BloonFactory.UI
         [HarmonyPostfix]
         private static bool Prefix(GameModel __instance, string id, ref BloonModel __result)
         {
-            if (__instance.bloons == null || __instance.bloons.Any(a => a.id == id))
+            try
+            {
+                if (__instance.bloons == null || __instance.bloons.Any(a => a.id == id))
+                    return true;
+                
+                if (__instance.bloons.Any(b => b.id.Contains(id)))
+                {
+                    __result = __instance.bloons.First(b => b.id.Contains(id));
+                    return false;
+                }
+                
+                string newId = id.Replace("Regrow", "").Replace("Camo", "").Replace("Fortified", "");
+                var bloon = __instance.bloons.FirstOrDefault(a => a.id == newId);
+                if (bloon != null)
+                {
+                    __result = bloon;
+                    return false;
+                }
+                
+                if (id.Contains("BloonFactory") && !BloonHandler.IsIdActive(id))
+                {
+                    return false;
+                }
                 return true;
-
-            string newId = id.Replace("Regrow", "").Replace("Camo", "").Replace("Fortified", "");
-            var bloon = __instance.bloons.FirstOrDefault(a => a.id == newId);
-            if (bloon != null)
+            }
+            catch (Exception ex)
             {
-                __result = bloon;
+                MelonLogger.Error(ex);
                 return false;
             }
-
-            if (__instance.bloons.Any(b => b.id.Contains(id)))
-            {
-                __result = __instance.bloons.First(b => b.id.Contains(id));
-                return false;
-            }
-
-            return true;
         }
     }
     [HarmonyPatch(typeof(BloonMenu), nameof(BloonMenu.CreateBloonButtons))]
@@ -53,7 +68,7 @@ namespace BloonFactory.UI
         [HarmonyPrefix]
         private static void Prefix(BloonMenu __instance, ref List<BloonModel> sortedBloons)
         {
-            sortedBloons = sortedBloons.Where(b => !CustomBloon.Bloons.Any(a => a.BloonTemplate.TemplateId == b.id));
+            sortedBloons = sortedBloons.Where(b => !BloonHandler.AllBloons.Any(a => a.Name == b.id));
         }
 
         [HarmonyPostfix]
@@ -67,31 +82,19 @@ namespace BloonFactory.UI
                 }
             }
 
-            foreach (var bloon in CustomBloon.Bloons)
+            foreach (var template in SerializationHandler.Templates)
             {
-                if (bloon.BloonTemplate.IsQueueForDeletion)
+                if (!BloonHandler.TryGetTemplateBloonId(template, out string id))
+                {
+                    MelonLogger.Msg($"Template \"{template.Name}\" does not have a corresponding bloonId, skipping.");
                     continue;
-
+                }
+                
                 var obj = Object.Instantiate(__instance.spawnBloonButtonPrefab, __instance.bloonButtonContainer.transform);
                 obj.name = name;
                 obj.RemoveComponent<SpawnBloonButton>();
                 
-                BloonModel model = InGame.instance.bridge.Model.GetBloon(bloon.BloonTemplate.TemplateId);
-                /*
-                string guid = model.icon.guidRef.Substring(3, model.icon.guidRef.Length - 4);
-
-                Texture2D texture = ResourceHandler.GetTexture(guid);
-
-                if (BloonFactory.CachedIcons.TryGetValue(guid, out byte[] data))
-                {
-                    ImageConversion.LoadImage(texture, data);
-                }
-                else
-                {
-                    texture = ModContent.GetTexture<BloonFactory>("BaseBloon");
-                }
-
-                var sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));*/
+                BloonModel model = InGame.instance.bridge.Model.GetBloon(id);
 
                 obj.transform.FindChild("Icon").GetComponent<Image>().SetSprite(model.icon);
                 obj.transform.FindChild("RawIcon").gameObject.SetActive(false);

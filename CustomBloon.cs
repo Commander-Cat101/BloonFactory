@@ -21,30 +21,27 @@ namespace BloonFactory
 {
     internal class CustomBloon : ModBloon
     {
-        public static List<CustomBloon> Bloons = new List<CustomBloon>(); 
+        public Guid BloonGUID;
         public override bool UseIconAsDisplay => false;
-        public override string Name => $"{BloonTemplate.Guid}";
+        public override string Name => BloonGUID.ToString();
         public override string BaseBloon => "Red";
-
-        public BloonTemplate BloonTemplate;
         public CustomBloon()
         {
 
         }
-        public CustomBloon(BloonTemplate template)
+        public CustomBloon(Guid guid)
         {
-            BloonTemplate = template;
+            BloonGUID = guid;
         }
         public override void ModifyBaseBloonModel(BloonModel bloonModel)
         {
-            bloonModel.name = BloonTemplate.Name;
-            bloonModel.id = BloonTemplate.TemplateId;
+            bloonModel.id = BloonGUID.ToString();
         }
-        public void ModifyExistingBloonModel(BloonModel model, RoundSetModel roundset)
+        public void ModifyExistingBloonModel(BloonTemplate template, BloonModel model, RoundSetModel roundset)
         {
-            BloonTemplate.LoadModules();
+            template.LoadModules();
             model.icon = new SpriteReference() { guidRef = "" };
-            foreach (var module in BloonTemplate.GetModulesOfType<BloonModule>())
+            foreach (var module in template.GetModulesOfType<BloonModule>())
             {
                 try
                 {
@@ -58,7 +55,7 @@ namespace BloonFactory
                 }
             }
 
-            foreach (var module in BloonTemplate.GetModulesOfType<TriggerModule>())
+            foreach (var module in template.GetModulesOfType<TriggerModule>())
             {
                 try
                 {
@@ -71,25 +68,19 @@ namespace BloonFactory
                 }
             }
 
-            DamageStateDisplayModule.DamageStateFix(model, BloonTemplate);
+            DamageStateDisplayModule.DamageStateFix(model, template);
             model.dontShowInSandbox = true;
         }
         public override IEnumerable<ModContent> Load()
         {
-            if (!SerializationHandler.HasLoaded)
-                SerializationHandler.LoadAllTemplates();
-
-            MelonLogger.Msg("STARTING LOAD");
-            foreach (var template in SerializationHandler.Templates)
+            List<CustomBloon> bloons = new List<CustomBloon>();
+            for (int i = 0; i < BloonFactory.CustomBloonAmount; i++)
             {
-                MelonLogger.Msg($"Loading {template.Name} bloon...");
-                yield return new CustomBloon(template);
+                var bloon = new CustomBloon(Guid.NewGuid());
+                bloons.Add(bloon);
+                yield return bloon;
             }
-        }
-        public override void Register()
-        {
-            base.Register();
-            Bloons.Add(this);
+            BloonHandler.Initialize(bloons.ToArray());
         }
     }
 }

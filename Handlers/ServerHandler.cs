@@ -63,7 +63,7 @@ namespace BloonFactory.Handlers
             UploadTemplateRequest request = new UploadTemplateRequest()
             {
                 Name = template.Name,
-                Guid = template.Guid,
+                Guid = new Guid(template.GetUUID()),
                 Creator = creator,
                 Category = (byte)category,
                 Description = description,

@@ -33,8 +33,6 @@ namespace BloonFactory.Handlers
         internal static string FolderDirectory => Path.Combine(MelonEnvironment.ModsDirectory, "Factory");
 
         internal const string FileExtention = ".cstmbln";
-
-        public static bool HasLoaded = false;
         internal static void EnsureFolderExists()
         {
             if (!Directory.Exists(FolderDirectory))
@@ -43,39 +41,27 @@ namespace BloonFactory.Handlers
         internal static void SaveTemplate(BloonTemplate template, string path)
         {
             EnsureFolderExists();
-
-            if (template.IsQueueForDeletion)
-                return;
-
             var content = JsonConvert.SerializeObject(template, Settings);
             File.WriteAllText(path + FileExtention, content);
         }
         internal static void SaveTemplate(BloonTemplate template)
         {
-            EnsureFolderExists();
-
-            if (template.IsQueueForDeletion)
-                return;
-
-            var content = JsonConvert.SerializeObject(template, Settings);
-            var path = Path.Combine(FolderDirectory, template.Guid.ToString() + FileExtention);
-            File.WriteAllText(path, content);
+            SaveTemplate(template, Path.Combine(FolderDirectory, template.GetUUID()));
         }
-        internal static bool ContainGuid(Guid guid)
+        internal static bool IsUUIDLoaded(string uuid)
         {
-            return Templates.Any(a => a.Guid == guid);
+            return Templates.Any(a => a.GetUUID() == uuid);
         }
         internal static bool TryLoadTemplate(BloonTemplate template)
         {
             EnsureFolderExists();
 
-            if (ContainGuid(template.Guid))
+            if (IsUUIDLoaded(template.GetUUID()))
             {
                 MelonLogger.Msg("File already exists");
                 return false;
             }
 
-            template.IsLoaded = false;
             SaveTemplate(template);
             Templates.Add(template);
             return true;
@@ -92,7 +78,7 @@ namespace BloonFactory.Handlers
         }
         internal static void LoadTemplate(BloonTemplate template)
         {
-            if (!ContainGuid(template.Guid))
+            if (!IsUUIDLoaded(template.GetUUID()))
             {
                 template.SetReferences();
                 Templates.Add(template);
@@ -107,20 +93,17 @@ namespace BloonFactory.Handlers
                 var template = GetTemplateFromPath(path);
                 LoadTemplate(template);
             }
-            HasLoaded = true;
         }
         internal static BloonTemplate CreateTemplate(string name)
         {
             EnsureFolderExists();
             var template = JsonConvert.DeserializeObject<BloonTemplate>(Assembly.GetCallingAssembly().GetEmbeddedText("DefaultTemplate" + FileExtention), Settings);
 
-            template.IsLoaded = false;
             template.Name = name;
-            template.Guid = Guid.NewGuid();
             template.SetReferences();
             
             template.CreationTime = DateTime.Now;
-            template.UUID = template.Guid.ToString();
+            template.UUID = Guid.NewGuid().ToString();
             
             SaveTemplate(template);
             Templates.Add(template);
@@ -129,16 +112,23 @@ namespace BloonFactory.Handlers
         internal static void DeleteTemplate(BloonTemplate template)
         {
             EnsureFolderExists();
-            if (template == null)
-                MelonLogger.Msg("TEMPLATE IS NULL");
-            if (template.Guid == null)
-                MelonLogger.Msg("GUID IS NULL");
-            var path = Path.Combine(FolderDirectory, template.Guid + FileExtention);
-            template.IsQueueForDeletion = true;
+            
+            var path = Path.Combine(FolderDirectory, template.GetUUID() + FileExtention);
             if (File.Exists(path))
             {
                 File.Delete(path);
             }
+        }
+
+        internal static bool TryGetTemplate(string uuid, out BloonTemplate template)
+        {
+            if (Templates.Any(a => a.GetUUID() == uuid))
+            {
+                template = Templates.First(a => a.GetUUID() == uuid);
+                return true;
+            }
+            template = null;
+            return false;
         }
     }    
     public class ResolverSerializationBinder : DefaultSerializationBinder

@@ -39,7 +39,6 @@ namespace BloonFactory.UI
         public BloonBrowserMenuPanel[] bloonPanels;
 
         public List<BloonBrowserEntry> allEntries = new List<BloonBrowserEntry>();
-
         public List<BloonBrowserEntry> filteredEntries = new List<BloonBrowserEntry>();
 
         public static int bloonsPerPage = 20;
@@ -47,7 +46,6 @@ namespace BloonFactory.UI
         public int currentPage = 0;
 
         ModHelperInputField searchField;
-
         ModHelperDropdown filterDropdown;
 
         SortingMethod SortingMethod = SortingMethod.Popular;

@@ -4,9 +4,7 @@ using System;
 namespace BloonFactory
 {
     internal class BloonTemplate : Template
-    {
-        public Guid Guid;
-
+    { 
         public string Name;
         public DateTime CreationTime;
         public string UUID;
@@ -15,11 +13,7 @@ namespace BloonFactory
         public UploadData? uploadData;
         
         [JsonIgnore]
-        public string TemplateId => Guid.ToString();
-        [JsonIgnore]
-        public bool IsLoaded = true;
-        [JsonIgnore]
-        public bool IsQueueForDeletion = false;
+        public string TemplateId => UUID;
         [JsonIgnore]
         public bool IsDownloaded => uploadData != null;
         public string GetName() => !IsDownloaded ? Name : uploadData?.Name;
@@ -33,7 +27,6 @@ namespace BloonFactory
         public DateTime UploadTime { get; }
         public string UUID { get; }
         public string Description { get; }
-        
         public string ModVersion { get; }
     }
 }

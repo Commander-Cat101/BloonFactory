@@ -11,6 +11,7 @@ using Il2CppInterop.Runtime.InteropTypes.Arrays;
 using MelonLoader;
 using System;
 using System.Linq;
+using BloonFactory.Handlers;
 using static Il2CppNinjaKiwi.GUTS.Models.BossRushRandomizerSettings;
 
 namespace BloonFactory.Modules.Behaviors
@@ -20,7 +21,7 @@ namespace BloonFactory.Modules.Behaviors
         public override string Name => "Add Children";
         public override void GetModuleProperties()
         {
-            AddProperty(new BloonEnumModuleProperty("Bloon", "BloonId", ((BloonTemplate)Template).TemplateId));
+            AddProperty(new BloonEnumModuleProperty("Bloon", "BloonId", ((BloonTemplate)Template).GetUUID()));
             AddProperty(new IntModuleProperty("Count", 10, 1, int.MaxValue));
 
         }
@@ -33,7 +34,10 @@ namespace BloonFactory.Modules.Behaviors
         {
             try
             {
-                string id = GetValue<string>("BloonId");
+                if (!BloonHandler.TryParseBloonId(GetValue<string>("BloonId"), out string id))
+                {
+                    return;
+                }
                 if (Game.instance.model.bloons.Any(a => a.id == id))
                     GetInputValue<BloonModel>("Bloon").AddToChildren(id, GetValue<int>("Count"));
             }

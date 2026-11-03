@@ -28,8 +28,8 @@ namespace BloonFactory.Modules.Spawning
         {
             int start = GetValue<int>("Start Round");
             int end = GetValue<int>("End Round");
-
             var modules = GetOutputsModules("Round");
+            
             for (int i = start; i < end; i++)
             {
                 currentRound = GetInputValue<RoundSetModel>("Roundset").rounds[i - 1];

@@ -54,7 +54,7 @@ namespace BloonFactory.UI
             }
         }
 
-        bool downloading = false;
+        private bool downloading;
         public void SetEntry(BloonBrowserEntry entry)
         {
             if (entry is null)
@@ -90,7 +90,7 @@ namespace BloonFactory.UI
             downloadCountText.SetText(GetDownloadString(entry.Downloads));
 
             SetDescriptionOpen(false);
-            SetDownloaded(SerializationHandler.ContainGuid(entry.Guid));
+            SetDownloaded(SerializationHandler.IsUUIDLoaded(entry.Guid.ToString()));
 
             gameObject.SetActive(true);
         }

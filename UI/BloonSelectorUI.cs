@@ -130,7 +130,7 @@ namespace BloonFactory.UI
                         }), "Return", Popup.TransitionAnim.Scale));
                 }));
             
-            uploadButton = rightPanel.AddButton(new Info("UploadButton", 450, 150, 0, new Vector2(0.5f, 0)),
+            uploadButton = rightPanel.AddButton(new Info("UploadButton", 450, 150, 200, new Vector2(0.5f, 0)),
                 VanillaSprites.BackupBtn, new Action(() =>
                 {
                     
@@ -213,13 +213,12 @@ namespace BloonFactory.UI
                     try
                     {
                         var template = SerializationHandler.GetTemplateFromPath(path);
-                        if (SerializationHandler.ContainGuid(template.Guid))
+                        if (SerializationHandler.IsUUIDLoaded(template.GetUUID()))
                         {
                             PopupScreen.instance.SafelyQueue(screen => screen.ShowPopup(PopupScreen.Placement.menuCenter, "Failed Import.", "Bloon is already active.", null, "Ok", null, null, Popup.TransitionAnim.Scale));
                         }
                         SerializationHandler.LoadTemplate(template);
                         SerializationHandler.SaveTemplate(template);
-                        template.IsLoaded = false;
 
                         AddContent();
                     }
@@ -240,7 +239,7 @@ namespace BloonFactory.UI
         {
             scrollPanel.ScrollContent.transform.DestroyAllChildren();
 
-            foreach (var template in SerializationHandler.Templates.Where(a => !a.IsQueueForDeletion))
+            foreach (var template in SerializationHandler.Templates)
             {
                 scrollPanel.AddScrollContent(CreateContentPanel(template));
             }

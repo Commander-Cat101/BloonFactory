@@ -10,7 +10,9 @@ using Il2CppAssets.Scripts.Unity.Menu;
 using Il2CppNinjaKiwi.Common;
 using Il2CppNinjaKiwi.Common.ResourceUtils;
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using BloonFactory.Handlers;
 using MelonLoader;
 using UnityEngine;
 using UnityEngine.UI;
@@ -22,21 +24,19 @@ namespace BloonFactory.ModuleProperties
 {
     public class BloonEnumModuleProperty : ModuleProperty
     {
-        private string TemplateId;
+        private string TemplateUUID;
         private string DisplayName;
-
-        private BloonModel[] Bloons => Game.instance.model.bloons.Where(a => a.id != TemplateId).ToArray();
 
         private ModHelperPanel scrollPanel;
         private ModHelperInputField inputField;
         private ModHelperButton button;
 
         private State currentState;
-        public BloonEnumModuleProperty(string displayName, string name, string templateId = "")
+        public BloonEnumModuleProperty(string displayName, string name, string templateUUID)
         {
             Name = name;
             DisplayName = displayName;
-            TemplateId = templateId;
+            TemplateUUID = templateUUID;
         }
         public override ModHelperPanel CreateTemplate()
         {
@@ -45,12 +45,8 @@ namespace BloonFactory.ModuleProperties
             panel.AddText(new Info("Text", -250, 0, 400, 100), "Property Name", 50, Il2CppTMPro.TextAlignmentOptions.Left).EnableAutoSizing();
 
             var inputField = panel.AddInputField(new Info("Type", 225, 0, 450, 80), "Default Value", VanillaSprites.BlueInsertPanelRound);
-            
-            inputField.InputField.onSelect.AddListener(new Action<string>(_ =>
-            {
-                MenuManager.instance.buttonClickSound.Play("ClickSounds");
-            }));
             inputField.Text.Text.overflowMode = Il2CppTMPro.TextOverflowModes.Overflow;
+            
             inputField.AddButton(new Info("Icon", -40, 0, 60, 60, new Vector2(1, 0.5f)), VanillaSprites.SearchIcon, new Action(() =>
             {
                 MenuManager.instance.buttonClickSound.Play("ClickSounds");
@@ -60,23 +56,27 @@ namespace BloonFactory.ModuleProperties
             var vert = scrollPanel.AddComponent<VerticalLayoutGroup>();
             vert.childControlHeight = false;
             scrollPanel.FitContent(vertical: ContentSizeFitter.FitMode.MinSize);
-
             return panel;
         }
 
         public override void SetupProperty(ModHelperPanel root)
         {
             var value = Module.GetValue<string>(Name);
-            BloonModel selectedBloon = Bloons.Where(a => a.id == value).FirstOrDefault();
-
+            
             root.transform.Find("Text").GetComponent<ModHelperText>().SetText(DisplayName);
             inputField = root.transform.Find("Type").GetComponent<ModHelperInputField>();
-            inputField.SetText(selectedBloon == null ? "Unloaded Bloon" : selectedBloon.name, false);
-            inputField.InputField.onValueChanged.AddListener(new Action<string>(CreateContentForInput));
-
-            scrollPanel = root.transform.Find("Options").GetComponent<ModHelperScrollPanel>();
-            
+            scrollPanel = root.transform.Find("Options").GetComponent<ModHelperPanel>();
             button = inputField.transform.Find("Icon").GetComponent<ModHelperButton>();
+            
+            inputField.SetText(!IsBloonAvailable(value, out var bloon) ? "Unavailable Bloon" : bloon.name, false);
+            inputField.InputField.onValueChanged.AddListener(new Action<string>(a =>
+            {
+                CreateContentForInput(a);
+            }));
+            inputField.InputField.onSelect.AddListener(new Action<string>(_ =>
+            {
+                MenuManager.instance.buttonClickSound.Play("ClickSounds");
+            }));
             
             if (value == string.Empty)
             {
@@ -88,12 +88,11 @@ namespace BloonFactory.ModuleProperties
 
         public void CreateContentForInput(string input)
         {
-            if (scrollPanel == null)
-                return;
-
             string strippedInput = input.ToLowerInvariant().Trim().Replace(" ", "");
 
-            BloonModel[] bloons = Bloons.Where(a => a.name.ToLowerInvariant().Replace(" ", "").Trim().Contains(strippedInput)).OrderBy(a => a.name.Length).ToArray();
+            (string name, string id)[] bloons = GetAvailableBloons()
+                .Where(a => a.name.ToLowerInvariant().Replace(" ", "").Trim().Contains(strippedInput))
+                .OrderBy(a => a.name.Length).ToArray();
 
             scrollPanel.transform.DestroyAllChildren();
 
@@ -115,7 +114,7 @@ namespace BloonFactory.ModuleProperties
             {
                 SelectOption(name, id);
             }));
-
+            
             var text = button.AddText(new Info("Text", 0, 0, 400, 80, new Vector2(0.5f, 0.5f)), name);
             text.EnableAutoSizing(40);
             text.Text.overflowMode = Il2CppTMPro.TextOverflowModes.Overflow;
@@ -155,6 +154,32 @@ namespace BloonFactory.ModuleProperties
             }
         }
 
+        public IEnumerable<(string name, string id)> GetAvailableBloons()
+        {
+            var bloons = Game.instance.model.bloons.Where(a => !a.name.Contains("BloonFactory")).Select(a => (a.name, a.id)).ToList();
+
+            foreach (var template in SerializationHandler.Templates)
+            {
+                if (template.GetUUID() == TemplateUUID)
+                    continue;
+                
+                bloons.Add((template.Name, template.GetUUID()));
+            }
+            
+            return bloons;
+        }
+
+        public bool IsBloonAvailable(string id, out (string name, string id) bloon)
+        {
+            bloon = ("", "");
+            var availableBloons = GetAvailableBloons();
+            if (!availableBloons.Any(a => a.id == id))
+            {
+                return false;
+            }
+            bloon = availableBloons.First(a => a.id == id);
+            return true;
+        }
         public override void LoadData()
         {
             if (!Module.HasValue(Name))
