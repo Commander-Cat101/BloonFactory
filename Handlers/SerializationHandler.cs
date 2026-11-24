@@ -28,8 +28,8 @@ namespace BloonFactory.Handlers
 {
     internal static class SerializationHandler
     {
-        internal static List<BloonTemplate> Templates = new List<BloonTemplate>();
-        internal static JsonSerializerSettings Settings => new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto, Formatting = Formatting.Indented, SerializationBinder = new ResolverSerializationBinder() };
+        internal static List<BloonTemplate> Templates = new();
+        internal static JsonSerializerSettings Settings => new() { TypeNameHandling = TypeNameHandling.Auto, Formatting = Formatting.Indented, SerializationBinder = new ResolverSerializationBinder() };
         internal static string FolderDirectory => Path.Combine(MelonEnvironment.ModsDirectory, "Factory");
 
         internal const string FileExtention = ".cstmbln";
@@ -112,7 +112,7 @@ namespace BloonFactory.Handlers
         internal static void DeleteTemplate(BloonTemplate template)
         {
             EnsureFolderExists();
-            
+            Templates.Remove(template);
             var path = Path.Combine(FolderDirectory, template.GetUUID() + FileExtention);
             if (File.Exists(path))
             {
@@ -139,7 +139,7 @@ namespace BloonFactory.Handlers
             { "BloonFactory.Modules.Actions.WaitTimeActionModule", typeof(WaitTimeActionModule) },
             { "BloonFactory.Modules.Actions.SetImmuneActionModule", typeof(SetImmuneActionModule) },
             { "BloonFactory.Modules.Actions.DrainLivesActionModule", typeof(DrainLivesActionModule) },
-            { "BloonFactory.Modules.Actions.HealBloonActionModule", typeof(HealBloonActionModule) }
+            { "BloonFactory.Modules.Actions.HealBloonActionModule", typeof(HealBloonActionModule) },
         };
         public override Type BindToType(string assemblyName, string typeName)
         {

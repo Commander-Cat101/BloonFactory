@@ -16,114 +16,290 @@ using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Web;
 using static BloonFactory.UI.BloonBrowserMenuPanel;
 
 namespace BloonFactory.Handlers
 {
     internal static class ServerHandler
     {
-        public const string URL = "https://server.bloonfactory.org/";
-        private static HttpClient client = new HttpClient();
-        internal static async Task<PageUpdateRequest> RequestPageUpdate()
+        public const string URL = "http://localhost:8000/";
+        private static HttpClient client = new();
+        internal static async Task<BloonBrowserResponse> RequestBloonBrowserContent(bool includeUnverified)
         {
-            HttpResponseMessage response = await client.GetAsync(URL + "getPage");
+            HttpResponseMessage response = await client.GetAsync(URL + $"requestBrowser?{includeUnverified}");
             response.EnsureSuccessStatusCode();
             byte[] bytes = await response.Content.ReadAsByteArrayAsync();
-
-            var obj = JsonConvert.DeserializeObject<PageUpdateRequest>(Encoding.UTF8.GetString(bytes), new JsonSerializerSettings() { TypeNameHandling = TypeNameHandling.None });
+            var obj = JsonConvert.DeserializeObject<BloonBrowserResponse>(Encoding.UTF8.GetString(bytes));
             return obj;
         }
-        internal static async Task<BloonTemplate> DownloadTemplate(Guid guid)
+        internal static async Task<BloonTemplate> DownloadTemplate(string uuid)
         {
-            HttpResponseMessage response = await client.GetAsync(URL + $"getTemplate={guid.ToString()}");
-            MelonLogger.Msg($"Requested template from server ({guid.ToString()})");
+            HttpResponseMessage response = await client.GetAsync(URL + $"getTemplate?{uuid}");
+            MelonLogger.Msg($"Requested template from server ({uuid})");
             response.EnsureSuccessStatusCode();
             byte[] bytes = await response.Content.ReadAsByteArrayAsync();
+            string jsonData = Encoding.UTF8.GetString(bytes);
 
+            if (jsonData == string.Empty)
+                return null;
+            
+            Console.WriteLine(jsonData);
+            
             try
             {
-                var obj = JsonConvert.DeserializeObject<BloonTemplate>(Encoding.UTF8.GetString(bytes), SerializationHandler.Settings);
+                var obj = JsonConvert.DeserializeObject<BloonTemplate>(jsonData, SerializationHandler.Settings);
                 return obj;
             }
             catch (Exception ex)
             {
                 MelonLogger.Msg(ex);
-                return null;
             }
+            return null;
         }
-        internal static async Task<(bool success, string errorCode)> UploadTemplate(BloonTemplate template, BloonCategory category, string description)
+
+        internal static async Task<(bool success, string errorCode)> UploadTemplate(BloonTemplate template, BloonCategory category)
         {
-            string creator = Game.Player.LiNKAccount?.DisplayName;
-            if (string.IsNullOrEmpty(creator))
+            if (!Game.TryGetPlayerShortCode(out string code))
             {
-                MelonLogger.Msg("You must be logged into a NK account to upload a template.");
-                return (false, "You must be logged into a NK account to upload a template.");
+                return (false, "Unable to get user code, are you signed into a NK account?");
             }
-            MelonLogger.Msg($"Uploading template to server ({template.Name})");
-            UploadTemplateRequest request = new UploadTemplateRequest()
+            
+            UploadBloonRequest request = new() { shortCode = code, serializedTemplate = JsonConvert.SerializeObject(template, SerializationHandler.Settings), modVersion = ModHelperData.Version, category = category };
+            
+            string serializedRequest = JsonConvert.SerializeObject(request, SerializationHandler.Settings);
+
+            (bool success, string errorCode) result = (false, "An error occured in processing the request.");
+            
+            try
             {
-                Name = template.Name,
-                Guid = new Guid(template.GetUUID()),
-                Creator = creator,
-                Category = (byte)category,
-                Description = description,
-                Version = ModHelperData.Version,
-                TemplateJson = JsonConvert.SerializeObject(template, SerializationHandler.Settings)
+                HttpResponseMessage response = await client.PostAsync(URL + "uploadTemplate",
+                    new StringContent(serializedRequest, Encoding.UTF8, "application/json"));
+                    
+                var serializedResponse = await response.Content.ReadAsByteArrayAsync();
+                    
+                var deserializedResponse =
+                    JsonConvert.DeserializeObject<UploadBloonResponse>(
+                        Encoding.UTF8.GetString(serializedResponse), SerializationHandler.Settings);
+                    
+                if (deserializedResponse.success && deserializedResponse.uploadData != null)
+                {
+                    template.uploadData = deserializedResponse.uploadData;
+                    SerializationHandler.SaveTemplate(template);
+                }
+                result = (deserializedResponse.success, deserializedResponse.errorCode);
+            }
+            catch (Exception ex)
+            {
+                MelonLogger.Error(ex);
+            }
+            return result;
+        }
+
+        internal static async Task<(bool isLiked, string errorCode)> LikeTemplate(BloonTemplate template)
+        {
+            if (!Game.TryGetPlayerShortCode(out string code))
+            {
+                return (false, "Unable to get user code, are you signed into a NK account?");
+            }
+
+            var request = new LikeRequest()
+            {
+                shortCode = code,
+                templateUUID = template.GetUUID()
             };
+            
+            string serializedRequest = JsonConvert.SerializeObject(request);
 
-            HttpResponseMessage response = await client.PostAsync(URL + "uploadTemplate", new StringContent(JsonConvert.SerializeObject(request)));
-
-            if (!response.IsSuccessStatusCode)
+            try
             {
-                byte[] bytes = await response.Content.ReadAsByteArrayAsync();
-                return (false, Encoding.UTF8.GetString(bytes));
+                HttpResponseMessage response = await client.PostAsync(URL + "likeTemplate",
+                    new StringContent(serializedRequest, Encoding.UTF8, "application/json"));
+
+                var serializedResponse = await response.Content.ReadAsByteArrayAsync();
+                var deserializedResponse =
+                    JsonConvert.DeserializeObject<(bool isLiked, string errorCode)>(
+                        Encoding.UTF8.GetString(serializedResponse));
+
+                return deserializedResponse;
             }
-            return (true, "");
+            catch (Exception ex)
+            {
+                MelonLogger.Error(ex);
+            }
+            
+            return (false, "An error occured in processing the request.");
+        }
+        internal static async Task<(bool success, string errorCode)> ReportTemplate(ReportFlags flags,
+            BloonTemplate template)
+        {
+            if (!Game.TryGetPlayerShortCode(out string code))
+            {
+                return (false, "Unable to get user code, are you signed into a NK account?");
+            }
+            
+            var request = new ReportRequest
+            {
+                ReportFlags = flags,
+                ShortCode = code,
+                TemplateUUID = template.GetUUID()
+            };
+            
+            string serializedRequest = JsonConvert.SerializeObject(request, SerializationHandler.Settings);
+            
+            (bool success, string errorCode) result = (false, "An error occured in processing the request.");
+            
+            try
+            {
+                HttpResponseMessage response = await client.PostAsync(URL + "reportTemplate", 
+                    new StringContent(serializedRequest, Encoding.UTF8, "application/json"));
+                
+                var serializedResponse = await response.Content.ReadAsByteArrayAsync();
+                var deserializedResponse =
+                    JsonConvert.DeserializeObject<(bool success, string errorCode)>(
+                        Encoding.UTF8.GetString(serializedResponse), SerializationHandler.Settings);
+                
+                return deserializedResponse;
+            }
+            catch {}
+            return result;
+        }
+
+        internal static async Task<(bool success, string errorCode)> RateTemplate(RateRequest request)
+        {
+            try
+            {
+                HttpResponseMessage response = await client.PostAsync(URL + "rateTemplate",
+                    new StringContent(JsonConvert.SerializeObject(request, SerializationHandler.Settings), Encoding.UTF8, "application/json"));
+                
+                var serializedResponse = await response.Content.ReadAsByteArrayAsync();
+                var deserializedResponse = JsonConvert.DeserializeObject<(bool success, string errorCode)>(
+                    Encoding.UTF8.GetString(serializedResponse), SerializationHandler.Settings);
+                
+                return deserializedResponse;
+            }
+            catch {}
+
+            return (false, "An error occured in processing the request.");
+        }
+        internal static async Task<(bool success, string errorCode)> DeleteTemplate(DeleteRequest request)
+        {
+            try
+            {
+                HttpResponseMessage response = await client.PostAsync(URL + "deleteTemplate",
+                    new StringContent(JsonConvert.SerializeObject(request, SerializationHandler.Settings), Encoding.UTF8, "application/json"));
+                
+                var serializedResponse = await response.Content.ReadAsByteArrayAsync();
+                var deserializedResponse = JsonConvert.DeserializeObject<(bool success, string errorCode)>(
+                    Encoding.UTF8.GetString(serializedResponse), SerializationHandler.Settings);
+                
+                return deserializedResponse;
+            }
+            catch {}
+
+            return (false, "An error occured in processing the request.");
+        }
+        internal static async Task<(bool success, string errorCode)> BanTemplate(BanRequest request)
+        {
+            try
+            {
+                HttpResponseMessage response = await client.PostAsync(URL + "banTemplate",
+                    new StringContent(JsonConvert.SerializeObject(request, SerializationHandler.Settings), Encoding.UTF8, "application/json"));
+                
+                var serializedResponse = await response.Content.ReadAsByteArrayAsync();
+                var deserializedResponse = JsonConvert.DeserializeObject<(bool success, string errorCode)>(
+                    Encoding.UTF8.GetString(serializedResponse), SerializationHandler.Settings);
+                
+                return deserializedResponse;
+            }
+            catch {}
+
+            return (false, "An error occured in processing the request.");
+        }
+        internal struct BanRequest
+        {
+            public string loginKey;
+            public string templateUUIDOrShortCode;
+        }
+        internal struct DeleteRequest
+        {
+            public string loginKey;
+            public string templateUUID;
+            public bool allByUser;
+        }
+        internal struct RateRequest
+        {
+            public string loginKey;
+            public string templateUUID;
+            public int verificationStatus;
+        }
+        private struct LikeRequest
+        {
+            public string shortCode;
+            public string templateUUID;
+        }
+        private struct UploadBloonRequest
+        {
+            public string shortCode;
+            public string modVersion;
+            public BloonCategory category;
+            public string serializedTemplate;
+        }
+        private struct UploadBloonResponse
+        {
+            public bool success;
+            public string errorCode;
+            public UploadData? uploadData;
+        }
+
+        private struct ReportRequest
+        {
+            public ReportFlags ReportFlags;
+            public string ShortCode;
+            public string TemplateUUID;
+        }
+        internal struct BloonBrowserResponse
+        {
+            public List<BloonBrowserEntry> Data;
         }
     }
-    public class PageUpdateRequest
+    internal struct BloonBrowserEntry
     {
-        public List<BloonBrowserEntry> Data;
+        public UploadData uploadData;
+        public int LikeCount;
+        public int DownloadCount;
+        public VerificationStatus VerificationStatus;
     }
-    public class UploadTemplateRequest
+    public enum VerificationStatus : byte
     {
-        public string Name;
-        public Guid Guid;
-        public string Creator;
-        public byte Category;
-        public string Description;
-        public string Version = "1.0.0";
-
-        public string TemplateJson;
+        Unverified,
+        Verified,
+        Excellent
     }
-    public class BloonBrowserEntry
+    [Flags]
+    public enum ReportFlags : byte
     {
-        public string Name;
-        public Guid Guid;
-        public string Creator;
-        public byte Category;
-        public string Description;
-        public string Version = "1.0.0";
-
-        public DateTime UploadTime = DateTime.Now;
-        public int Downloads = 0;
-
-        [JsonIgnore]
-        public BloonCategory CategoryEnum => (BloonCategory)Category;
+        None = 0,
+        OffensiveText = 1,
+        OffensiveAssets = 2,
+        Spam = 4,
+        Other = 8
     }
     public enum BloonCategory : byte
     {
-        Boss,
+        None,
         VanillaPlus,
+        Boss,
         Modded
     }
     public static class CategoryExtensions
     {
         public static string[] BloonCategoryNames =>
         [
-            "Boss",
-            "Vanilla+",
-            "Modded"
+            BloonCategory.None.ToFriendlyString(),
+            BloonCategory.VanillaPlus.ToFriendlyString(),
+            BloonCategory.Boss.ToFriendlyString(),
+            BloonCategory.Modded.ToFriendlyString()
         ];
         public static string ToFriendlyString(this BloonCategory category)
         {
@@ -132,7 +308,7 @@ namespace BloonFactory.Handlers
                 BloonCategory.Boss => "Boss",
                 BloonCategory.VanillaPlus => "Vanilla+",
                 BloonCategory.Modded => "Modded",
-                _ => "Unknown",
+                BloonCategory.None => "None",
             };
         }
     }

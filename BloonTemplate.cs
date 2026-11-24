@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
+using BloonFactory.Handlers;
 
 namespace BloonFactory
 {
@@ -8,6 +9,7 @@ namespace BloonFactory
         public string Name;
         public DateTime CreationTime;
         public string UUID;
+        public bool HasBeenLiked;
         public string Description;
 
         public UploadData? uploadData;
@@ -20,13 +22,19 @@ namespace BloonFactory
         public string GetDescription() => !IsDownloaded ? Description : uploadData?.Description;
         public string GetUUID() => !IsDownloaded ? UUID : uploadData?.UUID;
     }
+    [JsonObject(MemberSerialization.OptOut)]
     internal struct UploadData
     {
-        public string Name { get; }   
-        public string Author { get; }
-        public DateTime UploadTime { get; }
-        public string UUID { get; }
-        public string Description { get; }
-        public string ModVersion { get; }
+        [JsonProperty] public string Name;
+        [JsonProperty] public string Author;
+        [JsonProperty] public DateTime UploadTime;
+        [JsonProperty] public string UUID;
+        [JsonProperty] public string Description;
+        [JsonProperty] public string ModVersion;
+        [JsonProperty] public BloonCategory Category;
+        public override string ToString()
+        {
+            return $"Name: {Name}, Author: {Author}, UploadTime: {UploadTime}, UUID: {UUID}, Description: {Description}, ModVersion: {ModVersion}";
+        }
     }
 }
