@@ -30,9 +30,9 @@ public class BloonFactory : BloonsTD6Mod
         SerializationHandler.LoadAllTemplates();
     }
 
-    public override void OnMainMenu()
+    public override void OnDeinitializeMelon()
     {
-        
+        SerializationHandler.SaveAllTemplates();
     }
 
     public override void OnNewGameModel(GameModel result)

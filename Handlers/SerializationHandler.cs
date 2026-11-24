@@ -38,6 +38,14 @@ namespace BloonFactory.Handlers
             if (!Directory.Exists(FolderDirectory))
                 Directory.CreateDirectory(FolderDirectory);
         }
+
+        internal static void SaveAllTemplates()
+        {
+            foreach (var template in Templates)
+            {
+                SaveTemplate(template);
+            }
+        }
         internal static void SaveTemplate(BloonTemplate template, string path)
         {
             EnsureFolderExists();
