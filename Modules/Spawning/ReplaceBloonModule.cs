@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BloonFactory.Handlers;
 
 namespace BloonFactory.Modules.Spawning
 {
@@ -21,14 +22,17 @@ namespace BloonFactory.Modules.Spawning
         }
         public override void GetModuleProperties()
         {
-            AddProperty(new BloonEnumModuleProperty("Bloon", "BloonId", ((BloonTemplate)Template).TemplateId));
+            AddProperty(new BloonEnumModuleProperty("Bloon", "BloonId", ((BloonTemplate)Template).GetUUID()));
         }
         public override void ProcessModule()
         {
             RoundModel round = GetInputValue<RoundModel>("Round");
-            string bloonId = ((BloonTemplate)Template).TemplateId;
+            if (!BloonHandler.TryParseBloonId(((BloonTemplate)Template).TemplateId, out string bloonId))
+            {
+                return;
+            }
 
-            foreach (var group in round.groups.Where(a => a.bloon == GetValue<string>("BloonId")))
+            foreach (var group in round.groups.Where(a => a.bloon == bloonId))
             {
                 group.bloon = bloonId;
             }

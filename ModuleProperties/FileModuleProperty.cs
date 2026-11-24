@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BTD_Mod_Helper.Extensions;
 using UnityEngine;
 using static Il2CppNinjaKiwi.GUTS.Models.BossRushRandomizerSettings;
 using static Il2CppSystem.Linq.Expressions.Interpreter.CastInstruction.CastInstructionNoT;
@@ -27,16 +28,24 @@ namespace BloonFactory.ModuleProperties
             Name = name;
             Filter = filter;
         }
-        public override ModHelperPanel GetVisual(ModHelperPanel root)
-        {
-            var panel = root.AddPanel(new Info("FileModuleProperty", 0, 0, 1000, 300));
-            var button = panel.AddButton(new Info("Button", 0, 0, 750, 250, new Vector2(0.5f, 0.5f)), VanillaSprites.GreenBtnLong, new Action(ButtonPressed));
-            Text = button.AddText(new Info("Text", 0, 0, 700, 200, new Vector2(0.5f, 0.5f)), "Select File");
-            Text.EnableAutoSizing(100, 0);
 
-            SetText();
+        public override ModHelperPanel CreateTemplate()
+        {
+            var panel = ModHelperPanel.Create(new Info("FileModuleProperty", 0, 0, 1000, 300));
+            var button = panel.AddButton(new Info("Button", 0, 0, 750, 250, new Vector2(0.5f, 0.5f)), VanillaSprites.GreenBtnLong, null);
+            var text = button.AddText(new Info("Text", 0, 0, 700, 200, new Vector2(0.5f, 0.5f)), "Select File");
+            text.EnableAutoSizing(100, 0);
+
             return panel;
         }
+
+        public override void SetupProperty(ModHelperPanel root)
+        {
+            root.transform.Find("Button").GetComponent<ModHelperButton>().Button.SetOnClick(ButtonPressed);
+            Text = root.transform.Find("Text").GetComponent<ModHelperText>();
+            SetText();
+        }
+
         public void SetText()
         {
             Text.SetText(HasValue ? "Clear File" : "Select File");

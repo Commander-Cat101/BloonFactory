@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace BloonFactory.Modules.Sounds
 {
-    internal class SoundModule : Module
+    /*internal class SoundModule : Module
     {
         public override string Name => "Sound Module";
 
@@ -27,5 +27,5 @@ namespace BloonFactory.Modules.Sounds
         {
             return new BloonSound(Sounds.BloonSoundByName.ElementAt(GetValue<int>("Sound")).Value);
         }
-    }
+    }*/
 }

@@ -39,15 +39,13 @@ namespace BloonFactory.UI
         public BloonBrowserMenuPanel[] bloonPanels;
 
         public List<BloonBrowserEntry> allEntries = new List<BloonBrowserEntry>();
-
         public List<BloonBrowserEntry> filteredEntries = new List<BloonBrowserEntry>();
 
-        public static int bloonsPerPage = 20;
+        public const int bloonsPerPage = 20;
         public int TotalPages => 1 + ((filteredEntries?.Count ?? 1) - 1) / bloonsPerPage;
         public int currentPage = 0;
 
         ModHelperInputField searchField;
-
         ModHelperDropdown filterDropdown;
 
         SortingMethod SortingMethod = SortingMethod.Popular;
@@ -108,20 +106,12 @@ namespace BloonFactory.UI
                 RefreshPage();
                 MenuManager.instance.buttonClick3Sound.Play("ClickSounds");
             });
-            GameMenu.firstPageBtn.SetOnClick(() => { 
-                SetPage(0);
-                MenuManager.instance.buttonClick2Sound.Play("ClickSounds");
-            });
             GameMenu.previousPageBtn.SetOnClick(() =>{ 
                 SetPage(currentPage - 1);
                 MenuManager.instance.buttonClick2Sound.Play("ClickSounds");
             });
             GameMenu.nextPageBtn.SetOnClick(() => {
                 SetPage(currentPage + 1);
-                MenuManager.instance.buttonClick2Sound.Play("ClickSounds");
-            });
-            GameMenu.lastPageBtn.SetOnClick(() => {
-                SetPage(TotalPages - 1);
                 MenuManager.instance.buttonClick2Sound.Play("ClickSounds");
             });
         }
@@ -135,7 +125,7 @@ namespace BloonFactory.UI
                 GenerateContentForPage();
             }), VanillaSprites.BlueInsertPanelRound, 70);
 
-            filterDropdown = container.AddDropdown(new Info("Filter", -1400, -425, 900, 150), CategoryExtensions.BloonCategoryNames.Prepend("All").ToIl2CppList(), 450, new Action<int>((val) =>
+            filterDropdown = container.AddDropdown(new Info("Filter", -1400, -425, 900, 150), CategoryExtensions.BloonCategoryNames.ToList().Where(a => a != "None").Prepend("All").ToIl2CppList(), 450, new Action<int>((val) =>
             {
                 GenerateContentForPage();
             }), VanillaSprites.BlueInsertPanelRound, 70);
@@ -156,9 +146,8 @@ namespace BloonFactory.UI
             GameMenu.refreshBtn.interactable = false;
             Task.Run(async () =>
             {
-                PageUpdateRequest request = await ServerHandler.RequestPageUpdate();
-                
-                allEntries = request.Data;
+                var response = await ServerHandler.RequestBloonBrowserContent(BloonFactory.ShowUnverifiedBloons);
+                allEntries = response.Data;
                 generatedContentReady = true;
             });
         }
@@ -192,8 +181,8 @@ namespace BloonFactory.UI
             if (!string.IsNullOrEmpty(search))
             {
                 filteredEntries = filteredEntries.Where(entry =>
-                    entry.Name.ToLower().Contains(search) ||
-                    entry.Creator.ToLower().Contains(search)
+                    entry.uploadData.Name.ToLower().Contains(search) ||
+                    entry.uploadData.Author.ToLower().Contains(search)
                 ).ToList();
             }
 
@@ -202,7 +191,7 @@ namespace BloonFactory.UI
                 var clientVersion = SemVersion.Parse(ModHelperData.Version);
                 filteredEntries = filteredEntries.Where(entry =>
                 {
-                    if (SemVersion.TryParse(entry.Version, out var version))
+                    if (SemVersion.TryParse(entry.uploadData.ModVersion, out var version))
                     {
                         return clientVersion.Major > version.Major || (clientVersion.Major == version.Major && clientVersion.Minor >= version.Minor);
                     }
@@ -213,25 +202,24 @@ namespace BloonFactory.UI
             filteredEntries = (filterDropdown.Dropdown.value switch
             {
                 0 => filteredEntries,
-                int val => filteredEntries.Where(entry => (int)entry.CategoryEnum == val - 1).ToList(),
+                int val => filteredEntries.Where(entry => (int)entry.uploadData.Category == val).ToList(),
             });
 
             filteredEntries = (SortingMethod switch
             {
-                SortingMethod.Popular => filteredEntries = filteredEntries.OrderByDescending(entry => entry.Downloads).ToList(),
-                SortingMethod.New => filteredEntries = filteredEntries.OrderByDescending(entry => entry.UploadTime).ToList(),
-                SortingMethod.Old => filteredEntries = filteredEntries.OrderBy(entry => entry.UploadTime).ToList(),
+                SortingMethod.Popular => filteredEntries = filteredEntries.OrderByDescending(entry => entry.LikeCount).ToList(),
+                SortingMethod.Downloads => filteredEntries = filteredEntries.OrderByDescending(entry => entry.DownloadCount).ToList(),
+                SortingMethod.New => filteredEntries = filteredEntries.OrderByDescending(entry => entry.uploadData.UploadTime).ToList(),
+                SortingMethod.Old => filteredEntries = filteredEntries.OrderBy(entry => entry.uploadData.UploadTime).ToList(),
             });
 
             
         }
         public void UpdateBottomBar()
         {
-            GameMenu.firstPageBtn.interactable = TotalPages >= 2 && currentPage > 0;
             GameMenu.previousPageBtn.interactable = TotalPages >= 2 && currentPage > 0;
 
             GameMenu.nextPageBtn.interactable = TotalPages >= 2 && currentPage < TotalPages - 1;
-            GameMenu.lastPageBtn.interactable = TotalPages >= 2 && currentPage < TotalPages - 1;
 
             GameMenu.totalPages = TotalPages;
             GameMenu.SetCurrentPage(currentPage + 1);
@@ -254,6 +242,7 @@ namespace BloonFactory.UI
     public enum SortingMethod
     {
         Popular,
+        Downloads,
         New,
         Old
     }

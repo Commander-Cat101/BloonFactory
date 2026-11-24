@@ -9,6 +9,7 @@ using Il2CppInterop.Runtime.InteropTypes.Arrays;
 using MelonLoader;
 using System;
 using System.Linq;
+using BloonFactory.Handlers;
 
 namespace BloonFactory.Modules.Actions
 {
@@ -17,7 +18,7 @@ namespace BloonFactory.Modules.Actions
         public override string Name => "Spawn Bloons";
         public override void GetModuleProperties()
         {
-            AddProperty(new BloonEnumModuleProperty("Bloon", "BloonId"));
+            AddProperty(new BloonEnumModuleProperty("Bloon", "BloonId", ((BloonTemplate)Template).GetUUID()));
             AddProperty(new IntModuleProperty("Count", 10, 0, int.MaxValue));
             AddProperty(new FloatModuleProperty("Distance Ahead", 45, float.MinValue, float.MaxValue));
 
@@ -32,13 +33,16 @@ namespace BloonFactory.Modules.Actions
             try
             {
                 var trigger = GetInputValue<Trigger>("Trigger");
-                string id = GetValue<string>("BloonId");
+                if (!BloonHandler.TryParseBloonId(GetValue<string>("BloonId"), out string id))
+                {
+                    return;
+                }
                 
                 if (!Il2CppAssets.Scripts.Unity.Game.instance.model.bloons.Any(a => a.id == id))
                     return;
 
                 trigger.bloonModel.AddBehavior(new SpawnBloonsActionModel("SpawnBloonsActionModel", Id.ToString(), id, GetValue<int>("Count"), 0.02f
-                    , GetValue<float>("Distance Ahead"), 0, 0, new Il2CppStringArray(["BloonariusAttackSpew"]), new Il2CppStringArray(["BloonariusAttackSpewMoab"]), 1.5f, false, "Bloonarius"));
+                    , GetValue<float>("Distance Ahead"), 0, 0, new Il2CppStringArray(["BloonariusAttackSpew"]), new Il2CppStringArray(["BloonariusAttackSpewMoab"]), 1.5f, false, 0, 0, "Bloonarius"));
             }
             catch (Exception ex)
             {

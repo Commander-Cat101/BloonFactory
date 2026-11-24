@@ -25,15 +25,15 @@ namespace BloonFactory.Modules.Actions.Game
             {
                 if (type == 0)
                 {
-                    InGame.instance.bridge.AddCash(value, CashSource.Normal);
+                    InGame.instance.bridge.AddCash(0, value, CashSource.Normal);
                 }
                 else if (type == 1)
                 {
-                    InGame.instance.bridge.SetCash(InGame.instance.bridge.GetCash() - value);
+                    InGame.instance.bridge.SetCash(InGame.instance.bridge.GetCash() - value, 0);
                 }
                 else if (type == 2)
                 {
-                    InGame.instance.bridge.SetCash(value);
+                    InGame.instance.bridge.SetCash(value, 0);
                 }
                 return false;
             }

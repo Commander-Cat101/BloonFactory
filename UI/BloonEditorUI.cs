@@ -103,8 +103,8 @@ namespace BloonFactory.UI
             })
             .WithNested("Sounds", 800, menu =>
             {
-                menu.WithButton(typeof(SoundModule))
-                .WithButton(typeof(DamageSoundsModule))
+                //menu.WithButton(typeof(SoundModule))
+                menu.WithButton(typeof(DamageSoundsModule))
                 .WithButton(typeof(PlaySoundActionModule))
                 .WithButton(typeof(SoundOnSpawnModule));
                 
